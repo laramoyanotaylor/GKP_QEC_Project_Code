@@ -1,6 +1,8 @@
 import scipy.sparse as sp
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter, LogLocator, NullFormatter
+from scipy.special import ndtr
 from ldpc import BpOsdDecoder
 from ldpc.mod2 import rank
 from ldpc.codes import rep_code
@@ -9,6 +11,36 @@ import json
 import time
 
 sqrt_pi = np.sqrt(np.pi)
+
+
+def gkp_physical_error_rate(sigma, number_of_intervals=100):
+    """Probability that ideal GKP correction produces a Pauli fault."""
+    sigma = np.asarray(sigma, dtype=float)
+    if np.any(sigma <= 0):
+        raise ValueError("sigma must be positive")
+
+    probability = np.zeros_like(sigma)
+    for m in range(number_of_intervals):
+        lower = (2 * m + 0.5) * sqrt_pi / sigma
+        upper = (2 * m + 1.5) * sqrt_pi / sigma
+        probability += 2 * (ndtr(-lower) - ndtr(-upper))
+    return float(probability) if probability.ndim == 0 else probability
+
+
+def decimal_probability_tick(value, _position):
+    if value <= 0:
+        return ""
+    precision = 3 if value >= 0.01 else 4
+    return f"{value:.{precision}f}".rstrip("0").rstrip(".")
+
+
+def format_log_probability_axis(axis):
+    axis.set_major_locator(LogLocator(base=10, subs=(1, 2, 5), numticks=30))
+    axis.set_major_formatter(FuncFormatter(decimal_probability_tick))
+    axis.set_minor_locator(
+        LogLocator(base=10, subs=(3, 4, 6, 7, 8, 9), numticks=100)
+    )
+    axis.set_minor_formatter(NullFormatter())
 
 def construct_hgp_stabilizers(H1, H2):
     """
@@ -253,6 +285,8 @@ def gkp_qldpc_z_only(
 
     return rates_sigma, rates, errors
 
+#\([7, 4, 3]\) classical hamming code
+# 16_4_6 from bp_osd
 H_hamming = sp.csr_matrix([
     [1, 0, 1, 0, 1, 0, 1],
     [0, 1, 1, 0, 0, 1, 1],
@@ -269,7 +303,8 @@ sigma_vals = np.arange(0.2, 0.5, 0.01)
 #run_qldpcgkp.py - name of cluster operation 
 
 checkpoint_file = "gkp_qldpc_hamming_results_v2.json" 
-plot_file = "GKP_qldpc_hamming_plot_v2.png"
+sigma_plot_file = "GKP_qldpc_hamming_plot_v2.png"
+physical_plot_file = "GKP_qldpc_hamming_logical_vs_physical_v2.png"
 
 rates_sigma, rates, errs = gkp_qldpc_z_only(
     Hx=Hx,
@@ -281,9 +316,14 @@ rates_sigma, rates, errs = gkp_qldpc_z_only(
     save_filename=checkpoint_file,
 )
 
-plt.figure(figsize=(8, 6))
+rates_sigma = np.asarray(rates_sigma, dtype=float)
+rates = np.asarray(rates, dtype=float)
+errs = np.asarray(errs, dtype=float)
 
-plt.errorbar(
+# Plot 1: logical error rate versus the Gaussian displacement spread sigma.
+fig_sigma, ax_sigma = plt.subplots(figsize=(8, 6))
+
+ax_sigma.errorbar(
     rates_sigma,
     rates,
     yerr=errs,
@@ -292,16 +332,44 @@ plt.errorbar(
     label="Hamming HGP [[58,16,3]]",
 )
 
-plt.yscale("log")
-plt.xlabel(r"Sigma ($\sigma$)")
-plt.ylabel("Logical Z error rate")
-plt.title("GKP Hamming Hypergraph-Product Code")
-plt.grid(True, which="both", linestyle="--")
-plt.legend()
-plt.tight_layout()
+ax_sigma.set_yscale("log")
+format_log_probability_axis(ax_sigma.yaxis)
+ax_sigma.set_xlabel(r"Gaussian displacement spread ($\sigma$)")
+ax_sigma.set_ylabel("Logical Z error rate")
+ax_sigma.set_title("GKP Hamming HGP code: logical error versus sigma")
+ax_sigma.grid(True, which="both", linestyle="--", alpha=0.5)
+ax_sigma.legend()
+fig_sigma.tight_layout()
 
-plt.savefig(
-    plot_file,
+fig_sigma.savefig(
+    sigma_plot_file,
+    dpi=300,
+    bbox_inches="tight",
+)
+
+# Plot 2: the same logical data versus the physical GKP error probability.
+physical_rates = gkp_physical_error_rate(rates_sigma)
+fig_physical, ax_physical = plt.subplots(figsize=(8, 6))
+ax_physical.errorbar(
+    physical_rates,
+    rates,
+    yerr=errs,
+    fmt="o-",
+    capsize=3,
+    label="Hamming HGP [[58,16,3]]",
+)
+ax_physical.set_xscale("log")
+ax_physical.set_yscale("log")
+format_log_probability_axis(ax_physical.xaxis)
+format_log_probability_axis(ax_physical.yaxis)
+ax_physical.set_xlabel(r"Physical GKP error probability ($p_{\mathrm{phys}}$)")
+ax_physical.set_ylabel("Logical Z error rate")
+ax_physical.set_title("GKP Hamming HGP code: logical versus physical error")
+ax_physical.grid(True, which="both", linestyle="--", alpha=0.5)
+ax_physical.legend()
+fig_physical.tight_layout()
+fig_physical.savefig(
+    physical_plot_file,
     dpi=300,
     bbox_inches="tight",
 )
@@ -309,6 +377,7 @@ plt.savefig(
 plt.show()
 
 print(f"Results saved to {checkpoint_file}")
-print(f"Plot saved to {plot_file}")
+print(f"Sigma plot saved to {sigma_plot_file}")
+print(f"Physical-probability plot saved to {physical_plot_file}")
 
 #scp GKP_qldpc_2.py icf-cluster:~/GKP_QEC_Project_Code/
