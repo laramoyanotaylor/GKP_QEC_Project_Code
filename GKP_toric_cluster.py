@@ -254,7 +254,22 @@ distances = [3, 5, 9, 15, 20]
 max_trials = 2_000_000
 min_errors = 500
 min_trials = 20_000
-checkpoint_file = "gkp_toric_spacetime_results_3.json"
+checkpoint_file = "gkp_toric_spacetime_results_4.json"
+sigma_plot_file = "GKP_toric_threshold_plot.png"
+physical_plot_file = "GKP_toric_logical_vs_physical_probability.png"
+
+# Optional overrides used by the per-distance cluster launch files.
+if os.environ.get("TORIC_SIGMA_VALUES"):
+    sigma_vals = np.fromstring(os.environ["TORIC_SIGMA_VALUES"], sep=",")
+if os.environ.get("TORIC_DISTANCES"):
+    distances = [int(value) for value in os.environ["TORIC_DISTANCES"].split(",")]
+checkpoint_file = os.environ.get("TORIC_CHECKPOINT_FILE", checkpoint_file)
+sigma_plot_file = os.environ.get("TORIC_SIGMA_PLOT_FILE", sigma_plot_file)
+physical_plot_file = os.environ.get("TORIC_PHYSICAL_PLOT_FILE", physical_plot_file)
+
+print(f"Distances: {distances}")
+print(f"Sigma values: {sigma_vals}")
+print(f"Checkpoint: {os.path.abspath(checkpoint_file)}")
 
 results_by_distance = {}
 
@@ -292,7 +307,7 @@ ax_sigma.legend()
 ax_sigma.grid(True, which="both", ls="--", alpha=0.5)
 fig_sigma.tight_layout()
 fig_sigma.savefig(
-    "GKP_toric_threshold_plot.png",
+    sigma_plot_file,
     dpi=300,
     bbox_inches="tight",
 )
@@ -317,7 +332,7 @@ ax_physical.legend()
 ax_physical.grid(True, which="both", ls="--", alpha=0.5)
 fig_physical.tight_layout()
 fig_physical.savefig(
-    "GKP_toric_logical_vs_physical_probability.png",
+    physical_plot_file,
     dpi=300,
     bbox_inches="tight",
 )
