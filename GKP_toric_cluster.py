@@ -249,7 +249,7 @@ sigma_vals = np.array([
     0.42, 0.45, 0.50,
 ])
 
-distances = [3, 5, 9, 15, 20]
+distances = [3, 5, 7, 9, 11]
 
 max_trials = 2_000_000
 min_errors = 500
