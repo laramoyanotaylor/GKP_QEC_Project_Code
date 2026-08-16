@@ -397,6 +397,30 @@ parser.add_argument(
         "result files"
     ),
 )
+parser.add_argument(
+    "--sigma",
+    type=float,
+    help="Run only this sigma value (useful for one-sigma-per-cluster-job runs)",
+)
+parser.add_argument(
+    "--trials",
+    type=int,
+    help="Run exactly this many trials; overrides the adaptive stopping limits",
+)
+parser.add_argument(
+    "--output",
+    help="Checkpoint/result JSON filename (defaults to the usual mode-based name)",
+)
+parser.add_argument(
+    "--rng-seed",
+    type=int,
+    help="Seed NumPy's random generator for a reproducible independent job",
+)
+parser.add_argument(
+    "--no-plot",
+    action="store_true",
+    help="Do not create a plot (recommended for one-sigma cluster jobs)",
+)
 args = parser.parse_args()
 
 if args.quick and args.focused:
@@ -465,8 +489,25 @@ else:
     min_trials = 20_000
     result_tag = ""
 
+if args.sigma is not None:
+    if args.sigma <= 0:
+        parser.error("--sigma must be positive")
+    sigma_vals = np.asarray([round(args.sigma, 5)])
+
+if args.trials is not None:
+    if args.trials <= 0:
+        parser.error("--trials must be positive")
+    # Requiring min_trials == max_trials disables the early error-count stop.
+    max_trials = args.trials
+    min_trials = args.trials
+
+if args.rng_seed is not None:
+    np.random.seed(args.rng_seed)
+
 # These names are deliberately distinct from the Hamming-code results.
 checkpoint_file = f"gkp_qldpc_mkmn_xz_{result_tag}{args.seed}_results.json"
+if args.output:
+    checkpoint_file = args.output
 plot_file = f"GKP_qldpc_mkmn_xz_{result_tag}{args.seed}_plot.png"
 
 (rates_sigma, block_rates, x_rates, z_rates,
@@ -480,6 +521,10 @@ plot_file = f"GKP_qldpc_mkmn_xz_{result_tag}{args.seed}_plot.png"
     save_filename=checkpoint_file,
     standard_bernoulli=args.standard,
 )
+
+if args.no_plot:
+    print(f"Results saved to {checkpoint_file}")
+    raise SystemExit(0)
 
 plt.figure(figsize=(8, 6))
 
