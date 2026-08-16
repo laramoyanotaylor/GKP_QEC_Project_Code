@@ -1,0 +1,254 @@
+{
+  "9": {
+    "0.54700": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0012341170426665375,
+      "errors": 629,
+      "measurement_noise": false,
+      "rate": 0.03145,
+      "sigma": 0.547,
+      "trials": 10000
+    },
+    "0.55175": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0013502516432132197,
+      "errors": 758,
+      "measurement_noise": false,
+      "rate": 0.0379,
+      "sigma": 0.5517500000000001,
+      "trials": 10000
+    },
+    "0.55650": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0014635313030475297,
+      "errors": 897,
+      "measurement_noise": false,
+      "rate": 0.04485,
+      "sigma": 0.5565,
+      "trials": 10000
+    },
+    "0.56125": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.001565680522967569,
+      "errors": 1034,
+      "measurement_noise": false,
+      "rate": 0.0517,
+      "sigma": 0.56125,
+      "trials": 10000
+    },
+    "0.56600": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0017045849568150015,
+      "errors": 1239,
+      "measurement_noise": false,
+      "rate": 0.06195,
+      "sigma": 0.5660000000000001,
+      "trials": 10000
+    },
+    "0.57075": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0017981900622570464,
+      "errors": 1390,
+      "measurement_noise": false,
+      "rate": 0.0695,
+      "sigma": 0.5707500000000001,
+      "trials": 10000
+    },
+    "0.57550": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0019346543618951682,
+      "errors": 1630,
+      "measurement_noise": false,
+      "rate": 0.0815,
+      "sigma": 0.5755,
+      "trials": 10000
+    },
+    "0.58025": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0020708988084887203,
+      "errors": 1895,
+      "measurement_noise": false,
+      "rate": 0.09475,
+      "sigma": 0.58025,
+      "trials": 10000
+    },
+    "0.58500": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0022084926703523377,
+      "errors": 2191,
+      "measurement_noise": false,
+      "rate": 0.10955,
+      "sigma": 0.5850000000000001,
+      "trials": 10000
+    },
+    "0.58975": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0022782501783166834,
+      "errors": 2353,
+      "measurement_noise": false,
+      "rate": 0.11765,
+      "sigma": 0.58975,
+      "trials": 10000
+    },
+    "0.59450": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.002364338570298256,
+      "errors": 2565,
+      "measurement_noise": false,
+      "rate": 0.12825,
+      "sigma": 0.5945,
+      "trials": 10000
+    },
+    "0.59925": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.002430621216890859,
+      "errors": 2738,
+      "measurement_noise": false,
+      "rate": 0.1369,
+      "sigma": 0.5992500000000001,
+      "trials": 10000
+    },
+    "0.60400": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.002598836278029072,
+      "errors": 3220,
+      "measurement_noise": false,
+      "rate": 0.161,
+      "sigma": 0.6040000000000001,
+      "trials": 10000
+    },
+    "0.60875": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0026819243091481906,
+      "errors": 3484,
+      "measurement_noise": false,
+      "rate": 0.1742,
+      "sigma": 0.60875,
+      "trials": 10000
+    },
+    "0.61350": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.002810505092505616,
+      "errors": 3933,
+      "measurement_noise": false,
+      "rate": 0.19665,
+      "sigma": 0.6135,
+      "trials": 10000
+    },
+    "0.61825": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0028921120310250775,
+      "errors": 4248,
+      "measurement_noise": false,
+      "rate": 0.2124,
+      "sigma": 0.6182500000000001,
+      "trials": 10000
+    },
+    "0.62300": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0029144699132089185,
+      "errors": 4339,
+      "measurement_noise": false,
+      "rate": 0.21695,
+      "sigma": 0.623,
+      "trials": 10000
+    },
+    "0.62775": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0029876744928120933,
+      "errors": 4653,
+      "measurement_noise": false,
+      "rate": 0.23265,
+      "sigma": 0.62775,
+      "trials": 10000
+    },
+    "0.63250": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0030752163338536036,
+      "errors": 5066,
+      "measurement_noise": false,
+      "rate": 0.2533,
+      "sigma": 0.6325000000000001,
+      "trials": 10000
+    },
+    "0.63725": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0030990932343187096,
+      "errors": 5187,
+      "measurement_noise": false,
+      "rate": 0.25935,
+      "sigma": 0.6372500000000001,
+      "trials": 10000
+    },
+    "0.64200": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.003181106411297805,
+      "errors": 5636,
+      "measurement_noise": false,
+      "rate": 0.2818,
+      "sigma": 0.642,
+      "trials": 10000
+    },
+    "0.64675": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.003227562470348173,
+      "errors": 5918,
+      "measurement_noise": false,
+      "rate": 0.2959,
+      "sigma": 0.64675,
+      "trials": 10000
+    },
+    "0.65150": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.003266822309217323,
+      "errors": 6176,
+      "measurement_noise": false,
+      "rate": 0.3088,
+      "sigma": 0.6515000000000001,
+      "trials": 10000
+    },
+    "0.65625": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.0032935448987375287,
+      "errors": 6364,
+      "measurement_noise": false,
+      "rate": 0.3182,
+      "sigma": 0.65625,
+      "trials": 10000
+    },
+    "0.66100": {
+      "correction_rounds": 1,
+      "decoded_quadratures": 20000,
+      "error_bar": 0.003351769607237347,
+      "errors": 6818,
+      "measurement_noise": false,
+      "rate": 0.3409,
+      "sigma": 0.661,
+      "trials": 10000
+    }
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "7": {
+    "0.42034": {
+      "error_bar": 4.521874861599209e-05,
+      "errors": 500,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.0010116337885685382,
+      "rounds": 7,
+      "sigma": 0.4203397899677832,
+      "trials": 494250,
+      "uses_gkp_analog_information": true
+    },
+    "0.42489": {
+      "error_bar": 7.90827709706351e-05,
+      "errors": 500,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.0017699115044247787,
+      "rounds": 7,
+      "sigma": 0.4248931804518516,
+      "trials": 282500,
+      "uses_gkp_analog_information": true
+    },
+    "0.42933": {
+      "error_bar": 0.00011753283392563315,
+      "errors": 500,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.002631578947368421,
+      "rounds": 7,
+      "sigma": 0.4293346364400218,
+      "trials": 190000,
+      "uses_gkp_analog_information": true
+    },
+    "0.43367": {
+      "error_bar": 0.00017435127999372192,
+      "errors": 500,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.00390625,
+      "rounds": 7,
+      "sigma": 0.4336745367408767,
+      "trials": 128000,
+      "uses_gkp_analog_information": true
+    },
+    "0.43792": {
+      "error_bar": 0.0002795043684736148,
+      "errors": 500,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.006269592476489028,
+      "rounds": 7,
+      "sigma": 0.43792190324959207,
+      "trials": 79750,
+      "uses_gkp_analog_information": true
+    },
+    "0.44208": {
+      "error_bar": 0.0004329299062022267,
+      "errors": 502,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.00974757281553398,
+      "rounds": 7,
+      "sigma": 0.44208463345533877,
+      "trials": 51500,
+      "uses_gkp_analog_information": true
+    },
+    "0.44617": {
+      "error_bar": 0.0005194777685329758,
+      "errors": 684,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.01368,
+      "rounds": 7,
+      "sigma": 0.4461696846328927,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.45018": {
+      "error_bar": 0.0006388379199765775,
+      "errors": 1042,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.02084,
+      "rounds": 7,
+      "sigma": 0.45018322137243516,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.45413": {
+      "error_bar": 0.000739058725677466,
+      "errors": 1405,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.0281,
+      "rounds": 7,
+      "sigma": 0.4541307349362145,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.45802": {
+      "error_bar": 0.0008572136256499893,
+      "errors": 1910,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.0382,
+      "rounds": 7,
+      "sigma": 0.45801714070499744,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.46185": {
+      "error_bar": 0.0009909473406796146,
+      "errors": 2589,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.05178,
+      "rounds": 7,
+      "sigma": 0.4618468584125178,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.46562": {
+      "error_bar": 0.0011219959892976444,
+      "errors": 3375,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.0675,
+      "rounds": 7,
+      "sigma": 0.46562387871481786,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.46935": {
+      "error_bar": 0.0012581736318966472,
+      "errors": 4333,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.08666,
+      "rounds": 7,
+      "sigma": 0.4693518188201342,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.47303": {
+      "error_bar": 0.0014084888668356595,
+      "errors": 5583,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.11166,
+      "rounds": 7,
+      "sigma": 0.4730339692842605,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.47667": {
+      "error_bar": 0.0015430964998988236,
+      "errors": 6907,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.13814,
+      "rounds": 7,
+      "sigma": 0.4766733336169141,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.48027": {
+      "error_bar": 0.0017013271784110191,
+      "errors": 8777,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.17554,
+      "rounds": 7,
+      "sigma": 0.48027266199533775,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.48383": {
+      "error_bar": 0.0018184094126461182,
+      "errors": 10451,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.20902,
+      "rounds": 7,
+      "sigma": 0.4838344801186069,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.48736": {
+      "error_bar": 0.0019338508711893997,
+      "errors": 12449,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.24898,
+      "rounds": 7,
+      "sigma": 0.48736111401844306,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.49085": {
+      "error_bar": 0.002037994368981426,
+      "errors": 14713,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.29426,
+      "rounds": 7,
+      "sigma": 0.4908547115062831,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.49432": {
+      "error_bar": 0.0021053964168298565,
+      "errors": 16579,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.33158,
+      "rounds": 7,
+      "sigma": 0.4943172607832224,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    },
+    "0.49775": {
+      "error_bar": 0.0021686407743100287,
+      "errors": 18907,
+      "noise_model": "gkp_data_and_measurement_with_analog_weights",
+      "rate": 0.37814,
+      "rounds": 7,
+      "sigma": 0.4977506066611427,
+      "trials": 50000,
+      "uses_gkp_analog_information": true
+    }
+  }
+}

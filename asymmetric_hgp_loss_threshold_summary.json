@@ -1,0 +1,870 @@
+{
+  "method": "mean of adjacent-size log-linear curve crossings",
+  "loss_model": "compensated pure loss; vacuum variance 1/2",
+  "rows": [
+    {
+      "distance_ratio": "2:1",
+      "squeezing_db": 0.0,
+      "transmission": 0.95,
+      "loss_percent": 5.000000000000004,
+      "threshold": 0.5735312235192018,
+      "crossing_spread": 0.006528047745856136,
+      "pairwise_crossings": [
+        0.5703448766765019,
+        0.576872924422358,
+        0.5733758694587454
+      ],
+      "size_pairs": [
+        [
+          28,
+          127
+        ],
+        [
+          127,
+          298
+        ],
+        [
+          298,
+          541
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "2:1",
+      "squeezing_db": 0.0,
+      "transmission": 0.99,
+      "loss_percent": 1.0000000000000009,
+      "threshold": 0.5927680544079771,
+      "crossing_spread": 0.007350334673962178,
+      "pairwise_crossings": [
+        0.5914623092239323,
+        0.5970960943369805,
+        0.5897457596630183
+      ],
+      "size_pairs": [
+        [
+          28,
+          127
+        ],
+        [
+          127,
+          298
+        ],
+        [
+          298,
+          541
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "2:1",
+      "squeezing_db": 0.0,
+      "transmission": 0.999,
+      "loss_percent": 0.10000000000000009,
+      "threshold": 0.5983567360201293,
+      "crossing_spread": 0.012623848548715011,
+      "pairwise_crossings": [
+        0.5912231797558365,
+        0.6038470283045515,
+        0.6
+      ],
+      "size_pairs": [
+        [
+          28,
+          127
+        ],
+        [
+          127,
+          298
+        ],
+        [
+          298,
+          541
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "2:1",
+      "squeezing_db": 0.0,
+      "transmission": 1.0,
+      "loss_percent": 0.0,
+      "threshold": 0.5981546463660968,
+      "crossing_spread": 0.004808966773166334,
+      "pairwise_crossings": [
+        0.5951910332268336,
+        0.599272905871457,
+        0.6
+      ],
+      "size_pairs": [
+        [
+          28,
+          127
+        ],
+        [
+          127,
+          298
+        ],
+        [
+          298,
+          541
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "2:1",
+      "squeezing_db": 0.25,
+      "transmission": 0.95,
+      "loss_percent": 5.000000000000004,
+      "threshold": 0.5816956496343414,
+      "crossing_spread": 0.008326321081708055,
+      "pairwise_crossings": [
+        0.5804084833553758,
+        0.5865023933146782,
+        0.5781760722329702
+      ],
+      "size_pairs": [
+        [
+          28,
+          127
+        ],
+        [
+          127,
+          298
+        ],
+        [
+          298,
+          541
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "2:1",
+      "squeezing_db": 0.25,
+      "transmission": 0.99,
+      "loss_percent": 1.0000000000000009,
+      "threshold": 0.5988368436091897,
+      "crossing_spread": 0.002246117174071749,
+      "pairwise_crossings": [
+        0.5995981362629064,
+        0.5995603754758279,
+        0.5973520190888346
+      ],
+      "size_pairs": [
+        [
+          28,
+          127
+        ],
+        [
+          127,
+          298
+        ],
+        [
+          298,
+          541
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "2:1",
+      "squeezing_db": 0.25,
+      "transmission": 0.999,
+      "loss_percent": 0.10000000000000009,
+      "threshold": 0.6019815329108993,
+      "crossing_spread": 0.0008967534181640868,
+      "pairwise_crossings": [
+        0.6021586897537139,
+        0.6014445777804099,
+        0.602341331198574
+      ],
+      "size_pairs": [
+        [
+          28,
+          127
+        ],
+        [
+          127,
+          298
+        ],
+        [
+          298,
+          541
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "2:1",
+      "squeezing_db": 0.25,
+      "transmission": 1.0,
+      "loss_percent": 0.0,
+      "threshold": 0.603107480165356,
+      "crossing_spread": 0.003229593061828573,
+      "pairwise_crossings": [
+        0.601043127964622,
+        0.6040065915049955,
+        0.6042727210264506
+      ],
+      "size_pairs": [
+        [
+          28,
+          127
+        ],
+        [
+          127,
+          298
+        ],
+        [
+          298,
+          541
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.0,
+      "transmission": 0.95,
+      "loss_percent": 5.000000000000004,
+      "threshold": 0.5668061001518373,
+      "crossing_spread": 0.011602340579862314,
+      "pairwise_crossings": [
+        0.5637388650327427,
+        0.5741408880013159,
+        0.5625385474214536
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.0,
+      "transmission": 0.99,
+      "loss_percent": 1.0000000000000009,
+      "threshold": 0.5906885502446103,
+      "crossing_spread": 0.002328137186294099,
+      "pairwise_crossings": [
+        0.5911879464522719,
+        0.5916029207339265,
+        0.5892747835476324
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.0,
+      "transmission": 0.999,
+      "loss_percent": 0.10000000000000009,
+      "threshold": 0.5910884193712981,
+      "crossing_spread": 0.016045192543324927,
+      "pairwise_crossings": [
+        0.5814778908002526,
+        0.5975230833435775,
+        0.5942642839700641
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.0,
+      "transmission": 1.0,
+      "loss_percent": 0.0,
+      "threshold": 0.5910791966391401,
+      "crossing_spread": 0.016144330202050194,
+      "pairwise_crossings": [
+        0.585020057525689,
+        0.6011643877277392,
+        0.5870531446639918
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.375,
+      "transmission": 0.95,
+      "loss_percent": 5.000000000000004,
+      "threshold": 0.5807227752973093,
+      "crossing_spread": 0.005794158393148563,
+      "pairwise_crossings": [
+        0.5775282549417954,
+        0.5813176576151886,
+        0.583322413334944
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.375,
+      "transmission": 0.99,
+      "loss_percent": 1.0000000000000009,
+      "threshold": 0.6011529007550792,
+      "crossing_spread": 0.012232636490073001,
+      "pairwise_crossings": [
+        0.5934139545486865,
+        0.6056465910387595,
+        0.6043981566777913
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.375,
+      "transmission": 0.999,
+      "loss_percent": 0.10000000000000009,
+      "threshold": 0.6027475932775707,
+      "crossing_spread": 0.00874618379784553,
+      "pairwise_crossings": [
+        0.5972105560302264,
+        0.6050754839744136,
+        0.605956739828072
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.375,
+      "transmission": 1.0,
+      "loss_percent": 0.0,
+      "threshold": 0.6058851544970514,
+      "crossing_spread": 0.0067455065220553,
+      "pairwise_crossings": [
+        0.6017045421811953,
+        0.6084500487032506,
+        0.6075008726067083
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.75,
+      "transmission": 0.95,
+      "loss_percent": 5.000000000000004,
+      "threshold": 0.5819337721385286,
+      "crossing_spread": 0.013256418176359253,
+      "pairwise_crossings": [
+        0.587334758208788,
+        0.5843882181743689,
+        0.5740783400324287
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.75,
+      "transmission": 0.99,
+      "loss_percent": 1.0000000000000009,
+      "threshold": 0.6038999361073704,
+      "crossing_spread": 0.015069719197314146,
+      "pairwise_crossings": [
+        0.6021261220990568,
+        0.6123217027101842,
+        0.59725198351287
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.75,
+      "transmission": 0.999,
+      "loss_percent": 0.10000000000000009,
+      "threshold": 0.6060082637571079,
+      "crossing_spread": 0.007833013441805758,
+      "pairwise_crossings": [
+        0.6106335900844101,
+        0.6045906245443093,
+        0.6028005766426043
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 0.75,
+      "transmission": 1.0,
+      "loss_percent": 0.0,
+      "threshold": 0.6046342987958817,
+      "crossing_spread": 0.0021232790656786626,
+      "pairwise_crossings": [
+        0.604774973382627,
+        0.6035023219696698,
+        0.6056256010353485
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 1.0,
+      "transmission": 0.95,
+      "loss_percent": 5.000000000000004,
+      "threshold": 0.5772457255948601,
+      "crossing_spread": 0.018134586053027535,
+      "pairwise_crossings": [
+        0.5872202004058147,
+        0.5754313620259783,
+        0.5690856143527872
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 1.0,
+      "transmission": 0.99,
+      "loss_percent": 1.0000000000000009,
+      "threshold": 0.5843126646789217,
+      "crossing_spread": 0.033027691414199034,
+      "pairwise_crossings": [
+        0.5978585863952678,
+        0.5902485126604289,
+        0.5648308949810688
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 1.0,
+      "transmission": 0.999,
+      "loss_percent": 0.10000000000000009,
+      "threshold": 0.5922358966382516,
+      "crossing_spread": 0.03793704026032574,
+      "pairwise_crossings": [
+        0.607583929796338,
+        0.5994768705824046,
+        0.5696468895360123
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "3:1",
+      "squeezing_db": 1.0,
+      "transmission": 1.0,
+      "loss_percent": 0.0,
+      "threshold": 0.5918652411685544,
+      "crossing_spread": 0.025804916363587505,
+      "pairwise_crossings": [
+        0.5994908931505265,
+        0.600954873359362,
+        0.5751499569957745
+      ],
+      "size_pairs": [
+        [
+          17,
+          81
+        ],
+        [
+          81,
+          193
+        ],
+        [
+          193,
+          353
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "5:2",
+      "squeezing_db": 0.0,
+      "transmission": 0.95,
+      "loss_percent": 5.000000000000004,
+      "threshold": 0.5715949103940545,
+      "crossing_spread": 0.02005647283697709,
+      "pairwise_crossings": [
+        0.5616319456844308,
+        0.5714643669763249,
+        0.5816884185214078
+      ],
+      "size_pairs": [
+        [
+          14,
+          67
+        ],
+        [
+          67,
+          160
+        ],
+        [
+          160,
+          293
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "5:2",
+      "squeezing_db": 0.0,
+      "transmission": 0.99,
+      "loss_percent": 1.0000000000000009,
+      "threshold": 0.5903893383622444,
+      "crossing_spread": 0.007237243177845465,
+      "pairwise_crossings": [
+        0.590558209430125,
+        0.5866862812393814,
+        0.5939235244172268
+      ],
+      "size_pairs": [
+        [
+          14,
+          67
+        ],
+        [
+          67,
+          160
+        ],
+        [
+          160,
+          293
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "5:2",
+      "squeezing_db": 0.0,
+      "transmission": 0.999,
+      "loss_percent": 0.10000000000000009,
+      "threshold": 0.5912982400193013,
+      "crossing_spread": 0.01334281731943554,
+      "pairwise_crossings": [
+        0.5849317419880028,
+        0.5982745593074383,
+        0.5906884187624625
+      ],
+      "size_pairs": [
+        [
+          14,
+          67
+        ],
+        [
+          67,
+          160
+        ],
+        [
+          160,
+          293
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "5:2",
+      "squeezing_db": 0.0,
+      "transmission": 1.0,
+      "loss_percent": 0.0,
+      "threshold": 0.6025335613627191,
+      "crossing_spread": 0.014518680040780607,
+      "pairwise_crossings": [
+        0.6003084228516469,
+        0.6109054706386453,
+        0.5963867905978647
+      ],
+      "size_pairs": [
+        [
+          14,
+          67
+        ],
+        [
+          67,
+          160
+        ],
+        [
+          160,
+          293
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "5:2",
+      "squeezing_db": 0.375,
+      "transmission": 0.95,
+      "loss_percent": 5.000000000000004,
+      "threshold": 0.5814763767097088,
+      "crossing_spread": 0.008916262020505994,
+      "pairwise_crossings": [
+        0.5771962243341255,
+        0.5861124863546315,
+        0.5811204194403693
+      ],
+      "size_pairs": [
+        [
+          14,
+          67
+        ],
+        [
+          67,
+          160
+        ],
+        [
+          160,
+          293
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "5:2",
+      "squeezing_db": 0.375,
+      "transmission": 0.99,
+      "loss_percent": 1.0000000000000009,
+      "threshold": 0.6004662862430133,
+      "crossing_spread": 0.006330075759997,
+      "pairwise_crossings": [
+        0.6027803837917,
+        0.596450308031703,
+        0.6021681669056371
+      ],
+      "size_pairs": [
+        [
+          14,
+          67
+        ],
+        [
+          67,
+          160
+        ],
+        [
+          160,
+          293
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "5:2",
+      "squeezing_db": 0.375,
+      "transmission": 0.999,
+      "loss_percent": 0.10000000000000009,
+      "threshold": 0.6022407222350822,
+      "crossing_spread": 0.00541663476120513,
+      "pairwise_crossings": [
+        0.6015091786584683,
+        0.6053148114039917,
+        0.5998981766427866
+      ],
+      "size_pairs": [
+        [
+          14,
+          67
+        ],
+        [
+          67,
+          160
+        ],
+        [
+          160,
+          293
+        ]
+      ]
+    },
+    {
+      "distance_ratio": "5:2",
+      "squeezing_db": 0.375,
+      "transmission": 1.0,
+      "loss_percent": 0.0,
+      "threshold": 0.6036887052245431,
+      "crossing_spread": 0.012370489917758798,
+      "pairwise_crossings": [
+        0.598768834933802,
+        0.6111393248515608,
+        0.6011579558882667
+      ],
+      "size_pairs": [
+        [
+          14,
+          67
+        ],
+        [
+          67,
+          160
+        ],
+        [
+          160,
+          293
+        ]
+      ]
+    }
+  ]
+}

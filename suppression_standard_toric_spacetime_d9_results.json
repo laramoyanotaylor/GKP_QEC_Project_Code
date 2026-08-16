@@ -1,0 +1,235 @@
+{
+  "9": {
+    "0.36435": {
+      "sigma": 0.3643457307066982,
+      "physical_error_probability": 0.015000000000031481,
+      "rate": 0.000373,
+      "error_bar": 1.3653953108898537e-05,
+      "trials": 2000000,
+      "errors": 746,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.36876": {
+      "sigma": 0.36876159882264403,
+      "physical_error_probability": 0.016249999999997263,
+      "rate": 0.0007742934572202865,
+      "error_bar": 2.4475827778864218e-05,
+      "trials": 1291500,
+      "errors": 1000,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.37299": {
+      "sigma": 0.3729862886498782,
+      "physical_error_probability": 0.017499999999999523,
+      "rate": 0.0013131976362442547,
+      "error_bar": 4.1499679977445095e-05,
+      "trials": 761500,
+      "errors": 1000,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.37704": {
+      "sigma": 0.37704332673698066,
+      "physical_error_probability": 0.018749999999993387,
+      "rate": 0.002205071664829107,
+      "error_bar": 6.96535658567791e-05,
+      "trials": 453500,
+      "errors": 1000,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.38095": {
+      "sigma": 0.38095202156229485,
+      "physical_error_probability": 0.01999999999986112,
+      "rate": 0.003630434782608696,
+      "error_bar": 0.00011448141938187226,
+      "trials": 276000,
+      "errors": 1002,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.38473": {
+      "sigma": 0.3847284338860665,
+      "physical_error_probability": 0.021249999999999825,
+      "rate": 0.006012012012012012,
+      "error_bar": 0.0001894494587981595,
+      "trials": 166500,
+      "errors": 1001,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.38839": {
+      "sigma": 0.3883860804436318,
+      "physical_error_probability": 0.02249999999998427,
+      "rate": 0.008525423728813559,
+      "error_bar": 0.0002676441616776842,
+      "trials": 118000,
+      "errors": 1006,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.39194": {
+      "sigma": 0.39193645489128226,
+      "physical_error_probability": 0.02375000000013725,
+      "rate": 0.01384,
+      "error_bar": 0.00036943814637906575,
+      "trials": 100000,
+      "errors": 1384,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.39539": {
+      "sigma": 0.3953894204936571,
+      "physical_error_probability": 0.024999999999999998,
+      "rate": 0.01934,
+      "error_bar": 0.000435499304247435,
+      "trials": 100000,
+      "errors": 1934,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.39875": {
+      "sigma": 0.3987535109283426,
+      "physical_error_probability": 0.026249999999848707,
+      "rate": 0.02979,
+      "error_bar": 0.0005376109736603225,
+      "trials": 100000,
+      "errors": 2979,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.40204": {
+      "sigma": 0.40203616401489956,
+      "physical_error_probability": 0.027500000000023398,
+      "rate": 0.04093,
+      "error_bar": 0.0006265359933794706,
+      "trials": 100000,
+      "errors": 4093,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.40524": {
+      "sigma": 0.4052439056757453,
+      "physical_error_probability": 0.028749999999999887,
+      "rate": 0.05538,
+      "error_bar": 0.0007232776479333507,
+      "trials": 100000,
+      "errors": 5538,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.40838": {
+      "sigma": 0.4083824964209449,
+      "physical_error_probability": 0.02999999999996761,
+      "rate": 0.07561,
+      "error_bar": 0.0008360210996141187,
+      "trials": 100000,
+      "errors": 7561,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.41146": {
+      "sigma": 0.41145704921439813,
+      "physical_error_probability": 0.031250000000000014,
+      "rate": 0.09837,
+      "error_bar": 0.0009417714324611891,
+      "trials": 100000,
+      "errors": 9837,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.41447": {
+      "sigma": 0.4144721252321972,
+      "physical_error_probability": 0.03249999999987491,
+      "rate": 0.12445,
+      "error_bar": 0.0010438495940507905,
+      "trials": 100000,
+      "errors": 12445,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.41743": {
+      "sigma": 0.4174318123465675,
+      "physical_error_probability": 0.033749999999819674,
+      "rate": 0.15662,
+      "error_bar": 0.001149304901233785,
+      "trials": 100000,
+      "errors": 15662,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.42034": {
+      "sigma": 0.4203397899677832,
+      "physical_error_probability": 0.03499999999997687,
+      "rate": 0.19027,
+      "error_bar": 0.00124123860357306,
+      "trials": 100000,
+      "errors": 19027,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.42320": {
+      "sigma": 0.42319938301758964,
+      "physical_error_probability": 0.03624999999999933,
+      "rate": 0.2336,
+      "error_bar": 0.001338024812923886,
+      "trials": 100000,
+      "errors": 23360,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.42601": {
+      "sigma": 0.42601360716862136,
+      "physical_error_probability": 0.03749999999999999,
+      "rate": 0.27592,
+      "error_bar": 0.0014134643737993542,
+      "trials": 100000,
+      "errors": 27592,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.42879": {
+      "sigma": 0.42878520700023814,
+      "physical_error_probability": 0.03875000000004859,
+      "rate": 0.31964,
+      "error_bar": 0.0014746873241470546,
+      "trials": 100000,
+      "errors": 31964,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    },
+    "0.43152": {
+      "sigma": 0.4315166883746837,
+      "physical_error_probability": 0.04000000000000026,
+      "rate": 0.36333,
+      "error_bar": 0.0015209250839538415,
+      "trials": 100000,
+      "errors": 36333,
+      "rounds": 9,
+      "noise_model": "independent_bernoulli_data_and_measurement",
+      "uses_gkp_analog_information": false
+    }
+  }
+}

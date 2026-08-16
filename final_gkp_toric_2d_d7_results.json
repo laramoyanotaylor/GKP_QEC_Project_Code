@@ -1,0 +1,229 @@
+{
+  "7": {
+    "0.54700": {
+      "correction_rounds": 1,
+      "error_bar": 0.0025765820382824996,
+      "errors": 715,
+      "measurement_noise": false,
+      "rate": 0.0715,
+      "sigma": 0.547,
+      "trials": 10000
+    },
+    "0.55142": {
+      "correction_rounds": 1,
+      "error_bar": 0.0027206570897487245,
+      "errors": 805,
+      "measurement_noise": false,
+      "rate": 0.0805,
+      "sigma": 0.5514166666666667,
+      "trials": 10000
+    },
+    "0.55583": {
+      "correction_rounds": 1,
+      "error_bar": 0.002838757474670917,
+      "errors": 884,
+      "measurement_noise": false,
+      "rate": 0.0884,
+      "sigma": 0.5558333333333334,
+      "trials": 10000
+    },
+    "0.56025": {
+      "correction_rounds": 1,
+      "error_bar": 0.0029731464814233425,
+      "errors": 980,
+      "measurement_noise": false,
+      "rate": 0.098,
+      "sigma": 0.56025,
+      "trials": 10000
+    },
+    "0.56467": {
+      "correction_rounds": 1,
+      "error_bar": 0.0031176463879022585,
+      "errors": 1091,
+      "measurement_noise": false,
+      "rate": 0.1091,
+      "sigma": 0.5646666666666667,
+      "trials": 10000
+    },
+    "0.56908": {
+      "correction_rounds": 1,
+      "error_bar": 0.003313980084430201,
+      "errors": 1256,
+      "measurement_noise": false,
+      "rate": 0.1256,
+      "sigma": 0.5690833333333334,
+      "trials": 10000
+    },
+    "0.57350": {
+      "correction_rounds": 1,
+      "error_bar": 0.003550008309849429,
+      "errors": 1479,
+      "measurement_noise": false,
+      "rate": 0.1479,
+      "sigma": 0.5735,
+      "trials": 10000
+    },
+    "0.57792": {
+      "correction_rounds": 1,
+      "error_bar": 0.003759838294395119,
+      "errors": 1704,
+      "measurement_noise": false,
+      "rate": 0.1704,
+      "sigma": 0.5779166666666667,
+      "trials": 10000
+    },
+    "0.58233": {
+      "correction_rounds": 1,
+      "error_bar": 0.00386173846861747,
+      "errors": 1824,
+      "measurement_noise": false,
+      "rate": 0.1824,
+      "sigma": 0.5823333333333334,
+      "trials": 10000
+    },
+    "0.58675": {
+      "correction_rounds": 1,
+      "error_bar": 0.0040029968773407755,
+      "errors": 2004,
+      "measurement_noise": false,
+      "rate": 0.2004,
+      "sigma": 0.58675,
+      "trials": 10000
+    },
+    "0.59117": {
+      "correction_rounds": 1,
+      "error_bar": 0.004108223460329295,
+      "errors": 2150,
+      "measurement_noise": false,
+      "rate": 0.215,
+      "sigma": 0.5911666666666667,
+      "trials": 10000
+    },
+    "0.59558": {
+      "correction_rounds": 1,
+      "error_bar": 0.00421152881979929,
+      "errors": 2305,
+      "measurement_noise": false,
+      "rate": 0.2305,
+      "sigma": 0.5955833333333334,
+      "trials": 10000
+    },
+    "0.60000": {
+      "correction_rounds": 1,
+      "error_bar": 0.004415459658970966,
+      "errors": 2654,
+      "measurement_noise": false,
+      "rate": 0.2654,
+      "sigma": 0.6000000000000001,
+      "trials": 10000
+    },
+    "0.60442": {
+      "correction_rounds": 1,
+      "error_bar": 0.004510803808635441,
+      "errors": 2843,
+      "measurement_noise": false,
+      "rate": 0.2843,
+      "sigma": 0.6044166666666667,
+      "trials": 10000
+    },
+    "0.60883": {
+      "correction_rounds": 1,
+      "error_bar": 0.004580827872775837,
+      "errors": 2996,
+      "measurement_noise": false,
+      "rate": 0.2996,
+      "sigma": 0.6088333333333333,
+      "trials": 10000
+    },
+    "0.61325": {
+      "correction_rounds": 1,
+      "error_bar": 0.004595552197505758,
+      "errors": 3030,
+      "measurement_noise": false,
+      "rate": 0.303,
+      "sigma": 0.6132500000000001,
+      "trials": 10000
+    },
+    "0.61767": {
+      "correction_rounds": 1,
+      "error_bar": 0.004708953068358188,
+      "errors": 3319,
+      "measurement_noise": false,
+      "rate": 0.3319,
+      "sigma": 0.6176666666666667,
+      "trials": 10000
+    },
+    "0.62208": {
+      "correction_rounds": 1,
+      "error_bar": 0.0047997082202983965,
+      "errors": 3599,
+      "measurement_noise": false,
+      "rate": 0.3599,
+      "sigma": 0.6220833333333333,
+      "trials": 10000
+    },
+    "0.62650": {
+      "correction_rounds": 1,
+      "error_bar": 0.004832853815293817,
+      "errors": 3718,
+      "measurement_noise": false,
+      "rate": 0.3718,
+      "sigma": 0.6265000000000001,
+      "trials": 10000
+    },
+    "0.63092": {
+      "correction_rounds": 1,
+      "error_bar": 0.004896514678830239,
+      "errors": 3988,
+      "measurement_noise": false,
+      "rate": 0.3988,
+      "sigma": 0.6309166666666667,
+      "trials": 10000
+    },
+    "0.63533": {
+      "correction_rounds": 1,
+      "error_bar": 0.004940820883213639,
+      "errors": 4233,
+      "measurement_noise": false,
+      "rate": 0.4233,
+      "sigma": 0.6353333333333333,
+      "trials": 10000
+    },
+    "0.63975": {
+      "correction_rounds": 1,
+      "error_bar": 0.004956115313428452,
+      "errors": 4339,
+      "measurement_noise": false,
+      "rate": 0.4339,
+      "sigma": 0.63975,
+      "trials": 10000
+    },
+    "0.64417": {
+      "correction_rounds": 1,
+      "error_bar": 0.004980513929304887,
+      "errors": 4559,
+      "measurement_noise": false,
+      "rate": 0.4559,
+      "sigma": 0.6441666666666667,
+      "trials": 10000
+    },
+    "0.64858": {
+      "correction_rounds": 1,
+      "error_bar": 0.004995958266438982,
+      "errors": 4799,
+      "measurement_noise": false,
+      "rate": 0.4799,
+      "sigma": 0.6485833333333334,
+      "trials": 10000
+    },
+    "0.65300": {
+      "correction_rounds": 1,
+      "error_bar": 0.004999788395522354,
+      "errors": 4954,
+      "measurement_noise": false,
+      "rate": 0.4954,
+      "sigma": 0.653,
+      "trials": 10000
+    }
+  }
+}

@@ -1,0 +1,304 @@
+{
+  "standard_triangular_color_n7_d3": {
+    "0.20000": {
+      "sigma": 0.2,
+      "physical_error_probability": 9.373853928926264e-06,
+      "rate": 0.0,
+      "error_bar": 0.0,
+      "trials": 1000000,
+      "errors": 0,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.21000": {
+      "sigma": 0.21,
+      "physical_error_probability": 2.4416341238929418e-05,
+      "rate": 0.0,
+      "error_bar": 0.0,
+      "trials": 1000000,
+      "errors": 0,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.22000": {
+      "sigma": 0.22,
+      "physical_error_probability": 5.6180620053893044e-05,
+      "rate": 0.0,
+      "error_bar": 0.0,
+      "trials": 1000000,
+      "errors": 0,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.23000": {
+      "sigma": 0.23,
+      "physical_error_probability": 0.00011660288002931231,
+      "rate": 0.0,
+      "error_bar": 0.0,
+      "trials": 1000000,
+      "errors": 0,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.24000": {
+      "sigma": 0.24,
+      "physical_error_probability": 0.00022196237032434435,
+      "rate": 1e-06,
+      "error_bar": 9.999994999998751e-07,
+      "trials": 1000000,
+      "errors": 1,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.25000": {
+      "sigma": 0.25,
+      "physical_error_probability": 0.00039275058828629395,
+      "rate": 3e-06,
+      "error_bar": 1.7320482094907175e-06,
+      "trials": 1000000,
+      "errors": 3,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.26000": {
+      "sigma": 0.26,
+      "physical_error_probability": 0.000653055015190535,
+      "rate": 4e-06,
+      "error_bar": 1.999995999996e-06,
+      "trials": 1000000,
+      "errors": 4,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.27000": {
+      "sigma": 0.27,
+      "physical_error_probability": 0.0010295598350118392,
+      "rate": 1.8e-05,
+      "error_bar": 4.242602503181273e-06,
+      "trials": 1000000,
+      "errors": 18,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.28000": {
+      "sigma": 0.28,
+      "physical_error_probability": 0.0015503170438636751,
+      "rate": 4.8e-05,
+      "error_bar": 6.928036951402612e-06,
+      "trials": 1000000,
+      "errors": 48,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.29000": {
+      "sigma": 0.29,
+      "physical_error_probability": 0.0022434498706429894,
+      "rate": 0.000102,
+      "error_bar": 1.0098989850475144e-05,
+      "trials": 1000000,
+      "errors": 102,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.30000": {
+      "sigma": 0.3,
+      "physical_error_probability": 0.003135927894252411,
+      "rate": 0.000195,
+      "error_bar": 1.3962878463984423e-05,
+      "trials": 1000000,
+      "errors": 195,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.31000": {
+      "sigma": 0.31,
+      "physical_error_probability": 0.0042525144577689,
+      "rate": 0.00037383177570093456,
+      "error_bar": 2.6428956984678078e-05,
+      "trials": 535000,
+      "errors": 200,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.32000": {
+      "sigma": 0.32,
+      "physical_error_probability": 0.005614944623885931,
+      "rate": 0.0005722460658082976,
+      "error_bar": 4.045232805134782e-05,
+      "trials": 349500,
+      "errors": 200,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.33000": {
+      "sigma": 0.33,
+      "physical_error_probability": 0.007241354346626261,
+      "rate": 0.0012698412698412698,
+      "error_bar": 8.973430881061372e-05,
+      "trials": 157500,
+      "errors": 200,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.34000": {
+      "sigma": 0.34,
+      "physical_error_probability": 0.00914595283052374,
+      "rate": 0.001608,
+      "error_bar": 0.00011332834900412165,
+      "trials": 125000,
+      "errors": 201,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.35000": {
+      "sigma": 0.35,
+      "physical_error_probability": 0.011338911089714186,
+      "rate": 0.002380952380952381,
+      "error_bar": 0.0001681582108891171,
+      "trials": 84000,
+      "errors": 200,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.36000": {
+      "sigma": 0.36,
+      "physical_error_probability": 0.013826429463051031,
+      "rate": 0.003883495145631068,
+      "error_bar": 0.0002740708437607097,
+      "trials": 51500,
+      "errors": 200,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.37000": {
+      "sigma": 0.37,
+      "physical_error_probability": 0.016610943377349974,
+      "rate": 0.004902439024390244,
+      "error_bar": 0.0003449427352970408,
+      "trials": 41000,
+      "errors": 201,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.38000": {
+      "sigma": 0.38,
+      "physical_error_probability": 0.01969142790928752,
+      "rate": 0.008285714285714285,
+      "error_bar": 0.0005791288751744364,
+      "trials": 24500,
+      "errors": 203,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.39000": {
+      "sigma": 0.39,
+      "physical_error_probability": 0.02306376583955433,
+      "rate": 0.009302325581395349,
+      "error_bar": 0.0006547071889508038,
+      "trials": 21500,
+      "errors": 200,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.40000": {
+      "sigma": 0.4,
+      "physical_error_probability": 0.02672114947731623,
+      "rate": 0.015259259259259259,
+      "error_bar": 0.0010550202478702224,
+      "trials": 13500,
+      "errors": 206,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.41000": {
+      "sigma": 0.41,
+      "physical_error_probability": 0.03065449253131469,
+      "rate": 0.01725,
+      "error_bar": 0.001188571884658223,
+      "trials": 12000,
+      "errors": 207,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.42000": {
+      "sigma": 0.42,
+      "physical_error_probability": 0.03485283405284275,
+      "rate": 0.0222,
+      "error_bar": 0.0014733349924575877,
+      "trials": 10000,
+      "errors": 222,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.43000": {
+      "sigma": 0.43,
+      "physical_error_probability": 0.039303721597867304,
+      "rate": 0.0274,
+      "error_bar": 0.0016324594941376034,
+      "trials": 10000,
+      "errors": 274,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.44000": {
+      "sigma": 0.44,
+      "physical_error_probability": 0.04399356507896146,
+      "rate": 0.0326,
+      "error_bar": 0.0017758727431885428,
+      "trials": 10000,
+      "errors": 326,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.45000": {
+      "sigma": 0.45,
+      "physical_error_probability": 0.048907956267493974,
+      "rate": 0.0396,
+      "error_bar": 0.0019501753767289752,
+      "trials": 10000,
+      "errors": 396,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.46000": {
+      "sigma": 0.46,
+      "physical_error_probability": 0.05403195161085214,
+      "rate": 0.0462,
+      "error_bar": 0.002099179839842218,
+      "trials": 10000,
+      "errors": 462,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.47000": {
+      "sigma": 0.47,
+      "physical_error_probability": 0.0593503180407489,
+      "rate": 0.0573,
+      "error_bar": 0.0023241495218681604,
+      "trials": 10000,
+      "errors": 573,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.48000": {
+      "sigma": 0.48,
+      "physical_error_probability": 0.06484774287725759,
+      "rate": 0.0619,
+      "error_bar": 0.0024097383675411735,
+      "trials": 10000,
+      "errors": 619,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    },
+    "0.49000": {
+      "sigma": 0.49,
+      "physical_error_probability": 0.07050900989080419,
+      "rate": 0.0729,
+      "error_bar": 0.0025997228698459384,
+      "trials": 10000,
+      "errors": 729,
+      "noise_model": "independent_bernoulli_pauli_z",
+      "uses_gkp_analog_information": false
+    }
+  }
+}
