@@ -1,0 +1,1383 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Adaptive Toric Code Measurement Animation</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f5f7fb;
+      --ink: #18202b;
+      --muted: #5c6675;
+      --line: #d7dde8;
+      --panel: rgba(255, 255, 255, 0.9);
+      --green: #1f8f5f;
+      --red: #d33b3b;
+      --violet: #7757c7;
+      --cyan: #0097a7;
+      --gold: #d79a18;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      height: 100vh;
+    }
+
+    .stage {
+      position: relative;
+      min-width: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(236, 241, 248, 0.9)),
+        radial-gradient(circle at 20% 15%, rgba(0, 151, 167, 0.08), transparent 32%),
+        radial-gradient(circle at 84% 78%, rgba(215, 154, 24, 0.09), transparent 30%);
+    }
+
+    #scene {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .structure-viewer {
+      position: absolute;
+      inset: 112px 34px 42px;
+      display: none;
+      place-items: center;
+      padding: 22px;
+      border: 1px solid rgba(24, 32, 43, 0.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(12px);
+    }
+
+    .structure-viewer img { width: 100%; height: 100%; object-fit: contain; }
+
+    .hud {
+      position: absolute;
+      left: 24px;
+      top: 20px;
+      right: 24px;
+      pointer-events: none;
+    }
+
+    .title {
+      max-width: 760px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      line-height: 1.08;
+      font-weight: 760;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .status-strip {
+      position: absolute;
+      left: 24px;
+      bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid rgba(24, 32, 43, 0.08);
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      border-radius: 8px;
+      box-shadow: 0 16px 50px rgba(24, 32, 43, 0.08);
+      font-size: 13px;
+    }
+
+    .uncertainty-card {
+      position: absolute;
+      left: 24px;
+      top: 126px;
+      width: min(340px, calc(100% - 48px));
+      padding: 12px 14px 14px;
+      border: 1px solid rgba(24, 32, 43, 0.08);
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+      border-radius: 8px;
+      box-shadow: 0 16px 50px rgba(24, 32, 43, 0.08);
+      pointer-events: none;
+    }
+
+    .uncertainty-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 760;
+      text-transform: uppercase;
+    }
+
+    .uncertainty-head strong {
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    #uncertaintyGraph {
+      display: block;
+      width: 100%;
+      height: 120px;
+    }
+
+    .pulse {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 0 rgba(215, 154, 24, 0.48);
+      animation: pulse 1.6s infinite;
+    }
+
+    .pulse.stop {
+      background: var(--green);
+      animation: none;
+      box-shadow: 0 0 0 5px rgba(31, 143, 95, 0.12);
+    }
+
+    .round-label {
+      padding: 5px 8px;
+      border: 1px solid rgba(24, 32, 43, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 8px 24px rgba(24, 32, 43, 0.08);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+      transition: opacity 120ms linear, color 120ms linear, background 120ms linear;
+    }
+
+    .round-label.clean {
+      color: var(--green);
+    }
+
+    .round-label.warning {
+      color: var(--red);
+    }
+
+    .round-label.past {
+      color: #7a8492;
+      background: rgba(245, 247, 251, 0.7);
+    }
+
+    @keyframes pulse {
+      70% {
+        box-shadow: 0 0 0 9px rgba(215, 154, 24, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(215, 154, 24, 0);
+      }
+    }
+
+    aside {
+      display: grid;
+      grid-template-rows: auto minmax(150px, 1fr) auto;
+      gap: 20px;
+      min-width: 0;
+      padding: 22px;
+      border-left: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(16px);
+      overflow-y: auto;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      min-width: 0;
+    }
+
+    .metric span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .panel-title {
+      margin: 0 0 10px;
+      font-size: 13px;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 780;
+    }
+
+    #timeline {
+      width: 100%;
+      height: 230px;
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .controls {
+      display: grid;
+      gap: 16px;
+    }
+
+    .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .choice-grid button { min-height: 52px; padding: 7px 8px; font-size: 12px; }
+    .choice-grid button.active, .chip-row button.active { border-color: var(--cyan); background: rgba(0,151,167,.10); color: #006c78; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip-row button { min-height: 32px; padding: 4px 9px; font-size: 12px; }
+    .structure-note { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    button,
+    select,
+    input[type="range"] {
+      font: inherit;
+    }
+
+    button,
+    select {
+      min-height: 38px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .toggle-row input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--cyan);
+    }
+
+    button.primary {
+      border-color: #18202b;
+      background: #18202b;
+      color: #fff;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .readout {
+      color: var(--ink);
+      font-weight: 760;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--cyan);
+    }
+
+    .legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+      margin-top: 2px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .legend-item {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      border: 1px solid rgba(24, 32, 43, 0.18);
+    }
+
+    @media (max-width: 900px) {
+      body {
+        overflow: auto;
+      }
+
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(420px, 62vh) auto;
+        height: auto;
+        min-height: 100vh;
+      }
+
+      aside {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .hud {
+        left: 16px;
+        right: 16px;
+      }
+
+      .status-strip {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+      }
+
+      .uncertainty-card {
+        left: 16px;
+        top: 128px;
+        width: min(320px, calc(100% - 32px));
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="stage" aria-label="3D adaptive toric code measurement scene">
+      <canvas id="scene"></canvas>
+      <div id="structureViewer" class="structure-viewer"><img id="structureImage" alt=""></div>
+      <div class="hud">
+        <div class="title">
+          <h1 id="mainTitle">Adaptive Surface Code Measurements</h1>
+          <p id="mainSubtitle" class="subtitle">An open-boundary spacetime picture: each measurement brings in the next layer, failed checks extend the run, and a clean round locks the stopping boundary.</p>
+        </div>
+      </div>
+      <div class="status-strip">
+        <span id="statusPulse" class="pulse"></span>
+        <strong id="statusText">Measuring round 1</strong>
+      </div>
+      <div id="uncertaintyCard" class="uncertainty-card" aria-label="overall measurement uncertainty">
+        <div class="uncertainty-head">
+          <span>Measurement Uncertainty</span>
+          <strong id="uncertaintyValue">0%</strong>
+        </div>
+        <svg id="uncertaintyGraph" role="img" aria-label="overall measurement uncertainty by round"></svg>
+      </div>
+    </section>
+
+    <aside>
+      <section id="metricPanel" class="metric-grid" aria-label="current run statistics">
+        <div class="metric">
+          <span>Round</span>
+          <strong id="roundMetric">1</strong>
+        </div>
+        <div class="metric">
+          <span>Decision</span>
+          <strong id="decisionMetric">Continue</strong>
+        </div>
+        <div class="metric">
+          <span>Trusted</span>
+          <strong id="trustedMetric">0</strong>
+        </div>
+        <div class="metric">
+          <span>Untrusted</span>
+          <strong id="failedMetric">0</strong>
+        </div>
+      </section>
+
+      <section id="timelinePanel">
+        <p class="panel-title">Measurement Timeline</p>
+        <svg id="timeline" role="img" aria-label="measurement trust by round"></svg>
+      </section>
+
+      <section class="controls">
+        <div id="playbackControls" class="buttons">
+          <button id="rewindBtn" type="button">Reset</button>
+          <button id="playBtn" type="button" class="primary">Pause</button>
+          <button id="stepBtn" type="button">Step</button>
+        </div>
+
+        <label>Choose structure</label>
+        <div id="structureChoices" class="choice-grid">
+          <button data-structure="surface" class="active">2D surface code</button>
+          <button data-structure="torus">Toric code · torus</button>
+          <button data-structure="spacetime">Spacetime toric</button>
+          <button data-structure="mkmn">Large qLDPC</button>
+          <button data-structure="bb">BB code</button>
+          <button data-structure="asym">Asymmetric HGP</button>
+        </div>
+
+        <div id="distanceControl">
+          <label>Code distance</label>
+          <div id="distanceChoices" class="chip-row">
+            <button data-distance="3" class="active">d = 3</button><button data-distance="5">d = 5</button>
+            <button data-distance="7">d = 7</button><button data-distance="9">d = 9</button><button data-distance="11">d = 11</button>
+          </div>
+        </div>
+
+        <div id="ratioControl" hidden>
+          <label>Tested distance-ratio family</label>
+          <div id="ratioChoices" class="chip-row">
+            <button data-ratio="5:3" class="active">5:3</button><button data-ratio="2:1">2:1</button>
+            <button data-ratio="5:2">5:2</button><button data-ratio="3:1">3:1</button>
+          </div>
+        </div>
+        <p id="structureNote" class="structure-note"></p>
+
+        <label id="sigmaControl">
+          <span>GKP sigma <span id="sigmaValue" class="readout">0.45</span></span>
+          <input id="sigmaSlider" type="range" min="0.18" max="0.72" step="0.01" value="0.45">
+        </label>
+
+        <label id="speedControl">
+          <span>Animation speed <span id="speedValue" class="readout">1.0x</span></span>
+          <input id="speedSlider" type="range" min="0.4" max="2.0" step="0.1" value="1.0">
+        </label>
+
+        <label id="focusControl" class="toggle-row">
+          <span>Focus current round</span>
+          <input id="focusToggle" type="checkbox" checked>
+        </label>
+
+        <div class="legend" aria-label="visual legend">
+          <span class="legend-item"><span class="swatch" style="background: var(--violet)"></span>X stabilizer</span>
+          <span class="legend-item"><span class="swatch" style="background: var(--red)"></span>Z stabilizer</span>
+          <span class="legend-item"><span class="swatch" style="background: var(--cyan)"></span>Data qubit</span>
+          <span class="legend-item"><span class="swatch" style="background: var(--green)"></span>Trusted</span>
+          <span id="periodicLegend" class="legend-item" hidden><span class="swatch" style="background: #a7b0bf"></span>Periodic boundary copy</span>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from "three";
+    import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+    import { CSS2DObject, CSS2DRenderer } from "three/addons/renderers/CSS2DRenderer.js";
+    import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+
+    const canvas = document.querySelector("#scene");
+    const playBtn = document.querySelector("#playBtn");
+    const rewindBtn = document.querySelector("#rewindBtn");
+    const stepBtn = document.querySelector("#stepBtn");
+    const sigmaSlider = document.querySelector("#sigmaSlider");
+    const sigmaValue = document.querySelector("#sigmaValue");
+    const speedSlider = document.querySelector("#speedSlider");
+    const speedValue = document.querySelector("#speedValue");
+    const focusToggle = document.querySelector("#focusToggle");
+    const structureChoices = document.querySelector("#structureChoices");
+    const distanceChoices = document.querySelector("#distanceChoices");
+    const ratioChoices = document.querySelector("#ratioChoices");
+    const distanceControl = document.querySelector("#distanceControl");
+    const ratioControl = document.querySelector("#ratioControl");
+    const structureViewer = document.querySelector("#structureViewer");
+    const structureImage = document.querySelector("#structureImage");
+    const structureNote = document.querySelector("#structureNote");
+    const mainTitle = document.querySelector("#mainTitle");
+    const mainSubtitle = document.querySelector("#mainSubtitle");
+    const periodicLegend = document.querySelector("#periodicLegend");
+    const roundMetric = document.querySelector("#roundMetric");
+    const decisionMetric = document.querySelector("#decisionMetric");
+    const trustedMetric = document.querySelector("#trustedMetric");
+    const failedMetric = document.querySelector("#failedMetric");
+    const uncertaintyValue = document.querySelector("#uncertaintyValue");
+    const statusText = document.querySelector("#statusText");
+    const statusPulse = document.querySelector("#statusPulse");
+    const spacetimePanels = ["uncertaintyCard", "metricPanel", "timelinePanel", "playbackControls", "sigmaControl", "speedControl", "focusControl"].map(id => document.getElementById(id));
+    const statusStrip = document.querySelector(".status-strip");
+
+    const colors = {
+      ink: 0x18202b,
+      edge: 0x6d7787,
+      faded: 0xa7b0bf,
+      star: 0x7757c7,
+      plaq: 0xd33b3b,
+      qubit: 0x0097a7,
+      trusted: 0x1f8f5f,
+      failed: 0xd33b3b,
+      scanner: 0xd79a18,
+      time: 0x9ba6b7
+    };
+    const fadedColor = new THREE.Color(colors.faded);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xf5f7fb);
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+
+    const labelRenderer = new CSS2DRenderer();
+    labelRenderer.domElement.style.position = "absolute";
+    labelRenderer.domElement.style.inset = "0";
+    labelRenderer.domElement.style.pointerEvents = "none";
+    canvas.parentElement.appendChild(labelRenderer.domElement);
+
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.set(4.8, 5.3, 7.2);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0, 1.9, 0);
+    controls.maxDistance = 14;
+    controls.minDistance = 4;
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0xb7c0cc, 1.8));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    keyLight.position.set(3, 6, 4);
+    scene.add(keyLight);
+
+    const world = new THREE.Group();
+    scene.add(world);
+
+    const sphereGeometry = new THREE.SphereGeometry(0.085, 24, 16);
+    const measurementGeometry = new THREE.SphereGeometry(0.13, 32, 20);
+    const starGeometry = new THREE.BoxGeometry(0.18, 0.08, 0.18);
+    const plaqGeometry = new THREE.BoxGeometry(0.18, 0.08, 0.18);
+    const scannerGeometry = new THREE.RingGeometry(0.7, 0.76, 96);
+
+    const materials = {
+      star: new THREE.MeshStandardMaterial({ color: colors.star, roughness: 0.52, metalness: 0.08, transparent: true, opacity: 0.72 }),
+      plaq: new THREE.MeshStandardMaterial({ color: colors.plaq, roughness: 0.55, metalness: 0.05, transparent: true, opacity: 0.7 }),
+      qubit: new THREE.MeshStandardMaterial({ color: colors.qubit, roughness: 0.5, metalness: 0.08, transparent: true, opacity: 0.78 }),
+      ghost: new THREE.MeshStandardMaterial({ color: colors.faded, roughness: 0.62, metalness: 0.02, transparent: true, opacity: 0.58 }),
+      trusted: new THREE.MeshStandardMaterial({ color: colors.trusted, roughness: 0.36, metalness: 0.08, emissive: colors.trusted, emissiveIntensity: 0.12, transparent: true, opacity: 0.96 }),
+      failed: new THREE.MeshStandardMaterial({ color: colors.failed, roughness: 0.32, metalness: 0.08, emissive: colors.failed, emissiveIntensity: 0.28, transparent: true, opacity: 1 }),
+      scanner: new THREE.MeshBasicMaterial({ color: colors.scanner, transparent: true, opacity: 0.48, side: THREE.DoubleSide })
+    };
+
+    let sceneObjects = [];
+    let roundLabels = [];
+    let run = null;
+    let progress = 0;
+    let playing = true;
+    let speed = 1;
+    let lastTime = performance.now();
+    let selectedStructure = "surface";
+    let selectedDistance = 3;
+    let selectedRatio = "5:3";
+    let staticScene = true;
+
+    const asymmetricFamilies = {
+      "5:3": "[[23,1,3,5]], [[105,1,6,10]], [[247,1,9,15]], [[449,1,12,20]]",
+      "2:1": "[[28,1,3,6]], [[127,1,6,12]], [[298,1,9,18]], [[541,1,12,24]]",
+      "5:2": "[[14,1,2,5]], [[67,1,4,10]], [[160,1,6,15]], [[293,1,8,20]], [[466,1,10,25]]",
+      "3:1": "[[17,1,2,6]], [[81,1,4,12]], [[193,1,6,18]], [[353,1,8,24]], [[561,1,10,30]]"
+    };
+
+    function seededRandom(seed) {
+      let t = seed >>> 0;
+      return function random() {
+        t += 0x6d2b79f5;
+        let r = Math.imul(t ^ (t >>> 15), 1 | t);
+        r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+        return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function normalSample(random) {
+      const u1 = Math.max(random(), 1e-9);
+      const u2 = random();
+      return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
+    }
+
+    function buildAdaptiveRun(d, sigma, topology, maxRounds = 15) {
+      const threshold = Math.sqrt(Math.PI) / 2;
+      const random = seededRandom(Math.round(d * 1000 + sigma * 10000));
+      const stars = [];
+      const plaqs = [];
+      const qubits = [];
+      const edges = [];
+      const trusted = [];
+      const failed = [];
+      const rounds = [];
+
+      for (let t = 0; t < maxRounds; t += 1) {
+        addLayer(d, t, stars, plaqs, qubits, edges, true, topology);
+
+        const roundMeasurements = [];
+        let anyFailed = false;
+
+        for (let x = 0; x < d; x += 1) {
+          for (let y = 0; y < d; y += 1) {
+            const noise = normalSample(random) * sigma;
+            const entry = { p: [x, y, t + 0.5], kind: "x", noise, trusted: Math.abs(noise) <= threshold };
+            roundMeasurements.push(entry);
+          }
+        }
+
+        const plaquetteLimit = topology === "toric" ? d : d - 1;
+        for (let x = 0; x < plaquetteLimit; x += 1) {
+          for (let y = 0; y < plaquetteLimit; y += 1) {
+            const noise = normalSample(random) * sigma;
+            const entry = { p: [x + 0.5, y + 0.5, t + 0.5], kind: "z", noise, trusted: Math.abs(noise) <= threshold };
+            roundMeasurements.push(entry);
+          }
+        }
+
+        if (sigma > 0.32 && t < 2 && !roundMeasurements.some((m) => !m.trusted)) {
+          const forced = roundMeasurements[Math.floor(random() * roundMeasurements.length)];
+          forced.trusted = false;
+          forced.noise = threshold * 1.18;
+        }
+
+        for (const entry of roundMeasurements) {
+          if (entry.trusted) {
+            trusted.push(entry);
+          } else {
+            failed.push(entry);
+            anyFailed = true;
+          }
+        }
+
+        const failedCount = roundMeasurements.filter((m) => !m.trusted).length;
+        const trustedCount = roundMeasurements.length - failedCount;
+        rounds.push({
+          index: t,
+          trusted: trustedCount,
+          failed: failedCount,
+          uncertainty: failedCount / roundMeasurements.length,
+          stop: !anyFailed
+        });
+
+        if (!anyFailed) {
+          addLayer(d, t + 1, stars, plaqs, qubits, edges, false, topology);
+          return { d, sigma, topology, T: t + 2, stars, plaqs, qubits, edges, trusted, failed, rounds };
+        }
+      }
+
+      return { d, sigma, topology, T: maxRounds, stars, plaqs, qubits, edges, trusted, failed, rounds };
+    }
+
+    function buildEmbeddedCode(kind, ratio = "5:3") {
+      const sizes = { mkmn: 400, bb: 72, asym: {"5:3":449,"2:1":541,"5:2":466,"3:1":561}[ratio] };
+      const n = sizes[kind];
+      const qubits = [], stars = [], plaqs = [], edges = [];
+      const qubitAt = [];
+      const golden = Math.PI * (3 - Math.sqrt(5));
+
+      for (let i = 0; i < n; i += 1) {
+        let p;
+        if (kind === "bb") {
+          const u = 2 * Math.PI * i / n;
+          const v = 2 * Math.PI * ((i * 11) % n) / n;
+          p = [(2.35 + 0.72 * Math.cos(v)) * Math.cos(u), 0.72 * Math.sin(v), (2.35 + 0.72 * Math.cos(v)) * Math.sin(u)];
+        } else {
+          const y = 1 - 2 * (i + 0.5) / n;
+          const radius = Math.sqrt(1 - y * y);
+          const theta = i * golden;
+          const stretch = kind === "asym" ? ({"5:3":1.35,"2:1":1.55,"5:2":1.45,"3:1":1.75}[ratio]) : 1;
+          p = [2.65 * radius * Math.cos(theta), 2.65 * y * stretch, 2.65 * radius * Math.sin(theta)];
+        }
+        qubits.push(p); qubitAt.push(p);
+      }
+
+      const checksPerSector = kind === "bb" ? 36 : Math.round(n * 0.24);
+      for (let i = 0; i < checksPerSector; i += 1) {
+        const q = qubitAt[(i * 7) % n];
+        const scale = kind === "bb" ? 0.73 : 0.70;
+        const xCheck = q.map(value => value * scale);
+        const zSource = qubitAt[(i * 13 + Math.floor(n / 3)) % n];
+        const zCheck = zSource.map(value => value * scale);
+        stars.push(xCheck); plaqs.push(zCheck);
+        const degree = kind === "bb" ? 6 : 5;
+        for (let k = 0; k < degree; k += 1) {
+          edges.push([xCheck, qubitAt[(i * 7 + k * (kind === "bb" ? 11 : 17)) % n]]);
+          edges.push([zCheck, qubitAt[(i * 13 + k * (kind === "bb" ? 13 : 19)) % n]]);
+        }
+      }
+      return { d: Math.max(3, Math.round(Math.sqrt(n))), sigma: 0, topology: kind, T: 1, stars, plaqs, qubits, edges, trusted: [], failed: [], rounds: [{index:0,trusted:n,failed:0,uncertainty:0,stop:true}] };
+    }
+
+    function addLayer(d, t, stars, plaqs, qubits, edges, withEdges = true, topology = "surface") {
+      for (let x = 0; x < d; x += 1) {
+        for (let y = 0; y < d; y += 1) {
+          stars.push([x, y, t]);
+        }
+      }
+
+      for (let x = 0; x < d - 1; x += 1) {
+        for (let y = 0; y < d; y += 1) {
+          const q = [x + 0.5, y, t];
+          qubits.push(q);
+          if (withEdges) {
+            edges.push([[x, y, t], q]);
+            edges.push([q, [x + 1, y, t]]);
+          }
+        }
+      }
+
+      for (let x = 0; x < d; x += 1) {
+        for (let y = 0; y < d - 1; y += 1) {
+          const q = [x, y + 0.5, t];
+          qubits.push(q);
+          if (withEdges) {
+            edges.push([[x, y, t], q]);
+            edges.push([q, [x, y + 1, t]]);
+          }
+        }
+      }
+
+      for (let x = 0; x < d - 1; x += 1) {
+        for (let y = 0; y < d - 1; y += 1) {
+          const p = [x + 0.5, y + 0.5, t];
+          plaqs.push(p);
+          if (withEdges) {
+            edges.push([p, [x + 0.5, y, t]]);
+            edges.push([p, [x, y + 0.5, t]]);
+            edges.push([p, [x + 0.5, y + 1, t]]);
+            edges.push([p, [x + 1, y + 0.5, t]]);
+          }
+        }
+      }
+
+      if (topology === "toric") {
+        // The extra cell, horizontal edge and vertical edge close the square
+        // fundamental domain into a torus. Wrapped incidences are curved later.
+        for (let y = 0; y < d; y += 1) {
+          const q = [d - 0.5, y, t];
+          qubits.push(q);
+          if (withEdges) {
+            edges.push([[d - 1, y, t], q]);
+            edges.push([q, [0, y, t]]);
+          }
+        }
+        for (let x = 0; x < d; x += 1) {
+          const q = [x, d - 0.5, t];
+          qubits.push(q);
+          if (withEdges) {
+            edges.push([[x, d - 1, t], q]);
+            edges.push([q, [x, 0, t]]);
+          }
+        }
+        for (let x = 0; x < d; x += 1) {
+          for (let y = 0; y < d; y += 1) {
+            if (x < d - 1 && y < d - 1) continue;
+            const p = [x + 0.5, y + 0.5, t];
+            plaqs.push(p);
+            if (!withEdges) continue;
+            const left = [x, y + 0.5, t];
+            const right = [(x + 1) % d, y + 0.5, t];
+            const bottom = [x + 0.5, y, t];
+            const top = [x + 0.5, (y + 1) % d, t];
+            edges.push([p, bottom], [p, left], [p, top], [p, right]);
+          }
+        }
+      }
+    }
+
+    function positionOf(p) {
+      if (["mkmn", "bb", "asym"].includes(selectedStructure)) return new THREE.Vector3(...p);
+      if (selectedStructure === "torus") {
+        const u = 2 * Math.PI * p[0] / run.d;
+        const v = 2 * Math.PI * p[1] / run.d;
+        const major = 2.2;
+        const minor = 0.82;
+        return new THREE.Vector3(
+          (major + minor * Math.cos(v)) * Math.cos(u),
+          minor * Math.sin(v),
+          (major + minor * Math.cos(v)) * Math.sin(u)
+        );
+      }
+      const spacing = Math.max(0.38, 0.94 - run.d * 0.045);
+      const timeSpacing = 0.86;
+      const center = (run.d - 1) / 2;
+      return new THREE.Vector3((p[0] - center) * spacing, p[2] * timeSpacing, (p[1] - center) * spacing);
+    }
+
+    function measurementScale(noise) {
+      const threshold = Math.sqrt(Math.PI) / 2;
+      const relativeDisplacement = THREE.MathUtils.clamp(Math.abs(noise) / threshold, 0, 1.5);
+      // Small displacement means high confidence: trusted nodes are largest,
+      // while measurements beyond the trust threshold shrink toward minimum.
+      return THREE.MathUtils.lerp(1.05, 0.3, relativeDisplacement / 1.5);
+    }
+
+    function addNode(p, geometry, material, appear, scale = 1, role = "") {
+      const mesh = new THREE.Mesh(geometry, material.clone());
+      mesh.position.copy(positionOf(p));
+      mesh.scale.setScalar(scale);
+      mesh.userData = {
+        appear,
+        baseScale: scale,
+        baseOpacity: mesh.material.opacity,
+        role,
+        type: "node",
+        baseColor: mesh.material.color.clone(),
+        baseEmissive: mesh.material.emissive ? mesh.material.emissive.getHex() : 0
+      };
+      mesh.visible = false;
+      world.add(mesh);
+      sceneObjects.push(mesh);
+      return mesh;
+    }
+
+    function makeLineSegments(edges) {
+      const positions = [];
+      const wrapPositions = [];
+      for (const [a, b] of edges) {
+        const av = positionOf(a);
+        const bv = positionOf(b);
+        const spacing = Math.max(0.38, 0.94 - run.d * 0.045);
+        const wrappedX = selectedStructure !== "torus" && Math.abs(a[0] - b[0]) > run.d / 2;
+        const wrappedZ = selectedStructure !== "torus" && Math.abs(a[1] - b[1]) > run.d / 2;
+        if (!wrappedX && !wrappedZ) {
+          positions.push(av.x, av.y, av.z, bv.x, bv.y, bv.z);
+          continue;
+        }
+        // Bow periodic links toward the grey repeated boundary copies.
+        const mid = av.clone().add(bv).multiplyScalar(0.5);
+        const side = (run.d * 0.62) * spacing;
+        if (wrappedX) mid.x = (a[0] > b[0] ? 1 : -1) * side;
+        if (wrappedZ) mid.z = (a[1] > b[1] ? 1 : -1) * side;
+        const curve = new THREE.QuadraticBezierCurve3(av, mid, bv);
+        const points = curve.getPoints(10);
+        for (let i = 0; i < points.length - 1; i += 1) {
+          wrapPositions.push(points[i].x, points[i].y, points[i].z, points[i + 1].x, points[i + 1].y, points[i + 1].z);
+        }
+      }
+
+      function addLines(values, material, type) {
+        if (values.length === 0) return;
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.Float32BufferAttribute(values, 3));
+        const lines = new THREE.LineSegments(geometry, material);
+        if (material.isLineDashedMaterial) lines.computeLineDistances();
+        lines.userData = { appear: 0, type };
+        world.add(lines);
+        sceneObjects.push(lines);
+      }
+
+      addLines(
+        positions,
+        new THREE.LineBasicMaterial({ color: colors.edge, transparent: true, opacity: 0.2 }),
+        "lines"
+      );
+      addLines(
+        wrapPositions,
+        new THREE.LineDashedMaterial({ color: colors.faded, dashSize: 0.1, gapSize: 0.065, transparent: true, opacity: 0.48 }),
+        "wrap-lines"
+      );
+    }
+
+    function makeTimeLines() {
+      const positions = [];
+      const base = new Set([...run.stars, ...run.plaqs].map((p) => `${p[0]},${p[1]}`));
+      for (const key of base) {
+        const [x, y] = key.split(",").map(Number);
+        const a = positionOf([x, y, 0]);
+        const b = positionOf([x, y, run.T - 1]);
+        positions.push(a.x, a.y, a.z, b.x, b.y, b.z);
+      }
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
+      const material = new THREE.LineDashedMaterial({ color: colors.time, dashSize: 0.08, gapSize: 0.06, transparent: true, opacity: 0.24 });
+      const lines = new THREE.LineSegments(geometry, material);
+      lines.computeLineDistances();
+      lines.userData = { appear: 0, type: "time" };
+      world.add(lines);
+      sceneObjects.push(lines);
+    }
+
+    let scanner = null;
+
+    function makeRoundLabels() {
+      roundLabels = [];
+
+      for (const round of run.rounds) {
+        const div = document.createElement("div");
+        div.className = `round-label ${round.failed === 0 ? "clean" : "warning"}`;
+        div.textContent = `untrusted = ${round.failed}`;
+
+        const label = new CSS2DObject(div);
+        label.position.copy(positionOf([-1.45, (run.d - 1) / 2, round.index + 0.5]));
+        label.userData = { appear: round.index + 0.5, round };
+        label.visible = false;
+        world.add(label);
+        roundLabels.push(label);
+      }
+    }
+
+    function rebuildScene() {
+      world.clear();
+      sceneObjects = [];
+      roundLabels = [];
+      progress = 0;
+      staticScene = selectedStructure !== "spacetime";
+      spacetimePanels.forEach(panel => panel.hidden = staticScene);
+      statusStrip.hidden = staticScene;
+      const embeddedModes = ["mkmn", "bb", "asym"];
+      structureViewer.style.display = "none";
+      canvas.style.visibility = "visible";
+      distanceControl.hidden = !["surface", "torus", "spacetime"].includes(selectedStructure);
+      ratioControl.hidden = selectedStructure !== "asym";
+
+      const topology = selectedStructure === "surface" ? "surface" : "toric";
+      run = embeddedModes.includes(selectedStructure)
+        ? buildEmbeddedCode(selectedStructure, selectedRatio)
+        : buildAdaptiveRun(selectedDistance, Number(sigmaSlider.value), topology);
+      const isToric = topology === "toric";
+      if (["surface", "torus"].includes(selectedStructure)) {
+        run.stars = run.stars.filter(p => p[2] === 0); run.plaqs = run.plaqs.filter(p => p[2] === 0);
+        run.qubits = run.qubits.filter(p => p[2] === 0); run.edges = run.edges.filter(([a,b]) => a[2] === 0 && b[2] === 0);
+        run.trusted = []; run.failed = []; run.rounds = [{index:0,trusted:0,failed:0,uncertainty:0,stop:true}]; run.T = 1;
+      }
+      const descriptions = {
+        surface: [`2D Surface Code · d = ${selectedDistance}`, "A single two-dimensional open-boundary surface—no spacetime extrusion."],
+        torus: [`Toric Code on a Torus · d = ${selectedDistance}`, "The periodic lattice is embedded directly on a torus."],
+        spacetime: [`Adaptive Spacetime Toric Code · d = ${selectedDistance}`, "The periodic toric-code measurement history, with adaptive stopping after a trusted round."],
+        mkmn: ["Large qLDPC · 400 qubits", "Interactive geometric embedding of all 400 MKMN [[400,16,6]] physical qubits and its X/Z checks. Drag to orbit; scroll to move inside."],
+        bb: ["BB code · 72 qubits", "Interactive toroidal embedding of all 72 BB72 [[72,12,6]] physical qubits and its X/Z checks. Drag to orbit or move inside."],
+        asym: [`Asymmetric HGP · ${selectedRatio} · ${run.qubits.length} qubits`, `Interactive stretched embedding of the largest tested ${selectedRatio} member. Tested family: ${asymmetricFamilies[selectedRatio]}.`]
+      };
+      [mainTitle.textContent, mainSubtitle.textContent] = descriptions[selectedStructure];
+      structureNote.textContent = mainSubtitle.textContent;
+      periodicLegend.hidden = selectedStructure !== "spacetime";
+
+      makeLineSegments(run.edges);
+      if (!staticScene) makeTimeLines();
+
+      const embedded = embeddedModes.includes(selectedStructure);
+      for (const p of run.stars) addNode(p, starGeometry, materials.star, embedded ? 0 : layerAppearTime(p), embedded ? 0.72 : 1);
+      for (const p of run.plaqs) addNode(p, plaqGeometry, materials.plaq, embedded ? 0 : layerAppearTime(p), embedded ? 0.72 : 1);
+      for (const p of run.qubits) addNode(p, sphereGeometry, materials.qubit, embedded ? 0 : layerAppearTime(p), embedded ? 0.58 : 0.9);
+      if (selectedStructure === "spacetime") {
+        // Show a repeated fundamental domain without creating new physical
+        // objects. Right copies left; bottom copies top. These visual aliases
+        // are deliberately absent from buildAdaptiveRun, so they never get an
+        // independent GKP displacement or syndrome probability.
+        const layerTimes = [...new Set(run.stars.map((p) => p[2]))];
+        for (const t of layerTimes) {
+          for (let y = 0; y < run.d; y += 1) {
+            addNode([run.d, y + 0.5, t], sphereGeometry, materials.ghost, layerAppearTime([0, 0, t]), 0.9, "periodic-copy");
+          }
+          for (let x = 0; x < run.d; x += 1) {
+            addNode([x + 0.5, -1, t], sphereGeometry, materials.ghost, layerAppearTime([0, 0, t]), 0.9, "periodic-copy");
+          }
+        }
+      }
+      for (const measurement of run.trusted) {
+        addNode(measurement.p, measurementGeometry, materials.trusted, measurement.p[2], measurementScale(measurement.noise), "measurement");
+      }
+      for (const measurement of run.failed) {
+        addNode(measurement.p, measurementGeometry, materials.failed, measurement.p[2], measurementScale(measurement.noise), "failed-measurement");
+      }
+      makeRoundLabels();
+
+      scanner = new THREE.Mesh(scannerGeometry, materials.scanner);
+      scanner.rotation.x = Math.PI / 2;
+      scanner.userData = { type: "scanner" };
+      world.add(scanner);
+      scanner.visible = !staticScene;
+
+      const heightTarget = staticScene ? 0 : Math.max(1.9, (run.T - 1) * 0.46);
+      controls.target.set(0, heightTarget, 0);
+      const cameraDistance = embeddedModes.includes(selectedStructure) ? 8.2 : 4.2 + run.d * 0.65;
+      camera.position.set(cameraDistance * 0.68, staticScene ? 4.8 : Math.max(5.3, run.T * 0.82 + run.d * 0.12), cameraDistance);
+      controls.minDistance = embeddedModes.includes(selectedStructure) ? 0.35 : 4;
+      controls.maxDistance = Math.max(14, cameraDistance * 1.9);
+
+      drawTimeline();
+      drawUncertaintyGraph();
+      updateSceneState();
+    }
+
+    function decisionForProgress() {
+      const roundIndex = Math.min(Math.max(Math.floor(progress), 0), run.rounds.length - 1);
+      return run.rounds[roundIndex];
+    }
+
+    function updateSceneState() {
+      const maxProgress = Math.max(1, run.T - 1);
+      const clamped = Math.min(progress, maxProgress);
+      const scannerPosition = positionOf([0, 0, clamped]);
+      scanner.position.set(0, scannerPosition.y, 0);
+      scanner.scale.setScalar(0.9 + run.d * 0.23 + Math.sin(performance.now() * 0.004) * 0.025);
+
+      for (const object of sceneObjects) {
+        if (object.userData.type === "lines" || object.userData.type === "wrap-lines" || object.userData.type === "time") {
+          object.visible = true;
+          object.material.opacity = staticScene ? 0.32 : object.userData.type === "time"
+            ? 0.08 + 0.08 * (clamped / maxProgress)
+            : object.userData.type === "wrap-lines"
+              ? 0.4 + 0.3 * (clamped / maxProgress)
+              : 0.05 + 0.12 * (clamped / maxProgress);
+          continue;
+        }
+
+        const delta = clamped - object.userData.appear;
+        object.visible = delta >= -0.04;
+        if (!object.visible) continue;
+        const age = clamped - object.userData.appear;
+        // Ease new objects in instead of revealing a complete layer in one frame.
+        const entrance = staticScene ? 1 : THREE.MathUtils.smoothstep(age, 0, 0.38);
+        const focusCurrentRound = selectedStructure === "spacetime" && focusToggle.checked;
+        const isPast = focusCurrentRound && age > 0.7;
+        const pastMix = focusCurrentRound ? THREE.MathUtils.clamp((age - 0.7) / 1.2, 0, 0.78) : 0;
+        const baseColor = object.userData.baseColor || object.material.color.clone();
+
+        object.material.color.copy(baseColor).lerp(fadedColor, pastMix);
+        object.material.emissive?.setHex(isPast ? 0x000000 : object.userData.baseEmissive || 0x000000);
+        const settledOpacity = isPast
+          ? 0.16 + (1 - pastMix) * 0.22
+          : object.userData.baseOpacity;
+        object.material.opacity = settledOpacity * entrance;
+        const entranceScale = THREE.MathUtils.lerp(0.35, 1, entrance);
+        object.scale.setScalar(object.userData.baseScale * entranceScale);
+      }
+
+      for (const label of roundLabels) {
+        const age = clamped - label.userData.appear;
+        const focusCurrentRound = selectedStructure === "spacetime" && focusToggle.checked;
+        const isPast = focusCurrentRound && age > 0.7;
+        const pastMix = focusCurrentRound ? THREE.MathUtils.clamp((age - 0.7) / 1.2, 0, 0.72) : 0;
+
+        label.visible = age >= -0.08;
+        label.element.classList.toggle("past", isPast);
+        label.element.style.opacity = label.visible ? String(isPast ? 0.36 + (1 - pastMix) * 0.34 : 1) : "0";
+      }
+
+      updateReadout();
+      updateTimelineMarker();
+      updateUncertaintyMarker();
+    }
+
+    function updateReadout() {
+      const round = decisionForProgress();
+      const stop = round.stop && progress >= round.index + 0.5;
+      const visibleTrusted = run.trusted.filter((measurement) => measurement.p[2] <= progress + 0.05).length;
+      const visibleFailed = run.failed.filter((measurement) => measurement.p[2] <= progress + 0.05).length;
+
+      roundMetric.textContent = String(round.index + 1);
+      decisionMetric.textContent = stop ? "Stop" : "Continue";
+      trustedMetric.textContent = String(visibleTrusted);
+      failedMetric.textContent = String(visibleFailed);
+      uncertaintyValue.textContent = `${Math.round(round.uncertainty * 100)}%`;
+      statusPulse.classList.toggle("stop", stop);
+      statusText.textContent = stop ? `Stopping after round ${round.index + 1}` : `Measuring round ${round.index + 1}`;
+    }
+
+    function drawTimeline() {
+      const svg = d3.select("#timeline");
+      svg.selectAll("*").remove();
+
+      const width = svg.node().clientWidth;
+      const height = svg.node().clientHeight;
+      const margin = { top: 18, right: 18, bottom: 34, left: 42 };
+      const x = d3.scaleLinear().domain([0, run.rounds.length]).range([margin.left, width - margin.right]);
+      const y = d3.scaleLinear().domain([0, d3.max(run.rounds, (d) => d.trusted + d.failed) || 1]).nice().range([height - margin.bottom, margin.top]);
+
+      svg.append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(d3.axisBottom(x).ticks(run.rounds.length).tickFormat((d) => d === 0 ? "" : `r${d}`))
+        .call((g) => g.selectAll("text").attr("fill", "#5c6675"))
+        .call((g) => g.select(".domain").attr("stroke", "#d7dde8"));
+
+      svg.append("g")
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(d3.axisLeft(y).ticks(4))
+        .call((g) => g.selectAll("text").attr("fill", "#5c6675"))
+        .call((g) => g.select(".domain").attr("stroke", "#d7dde8"));
+
+      const barWidth = Math.max(14, (x(1) - x(0)) * 0.44);
+      const groups = svg.append("g").selectAll("g")
+        .data(run.rounds)
+        .join("g")
+        .attr("transform", (d) => `translate(${x(d.index + 0.5)},0)`);
+
+      groups.append("rect")
+        .attr("x", -barWidth / 2)
+        .attr("y", (d) => y(d.trusted))
+        .attr("width", barWidth)
+        .attr("height", (d) => y(0) - y(d.trusted))
+        .attr("rx", 4)
+        .attr("fill", "#1f8f5f")
+        .attr("opacity", 0.72);
+
+      groups.append("rect")
+        .attr("x", -barWidth / 2)
+        .attr("y", (d) => y(d.trusted + d.failed))
+        .attr("width", barWidth)
+        .attr("height", (d) => y(d.trusted) - y(d.trusted + d.failed))
+        .attr("rx", 4)
+        .attr("fill", "#d33b3b")
+        .attr("opacity", 0.78);
+
+      groups.append("text")
+        .attr("y", margin.top + 4)
+        .attr("text-anchor", "middle")
+        .attr("fill", (d) => d.stop ? "#1f8f5f" : "#d79a18")
+        .attr("font-weight", 800)
+        .attr("font-size", 11)
+        .text((d) => d.stop ? "stop" : "go");
+
+      svg.append("line")
+        .attr("id", "timelineMarker")
+        .attr("y1", margin.top - 2)
+        .attr("y2", height - margin.bottom + 5)
+        .attr("stroke", "#18202b")
+        .attr("stroke-width", 2);
+    }
+
+    function updateTimelineMarker() {
+      const svg = d3.select("#timeline");
+      const width = svg.node().clientWidth;
+      const margin = { right: 18, left: 42 };
+      const x = d3.scaleLinear().domain([0, run.rounds.length]).range([margin.left, width - margin.right]);
+      svg.select("#timelineMarker").attr("x1", x(Math.min(progress, run.rounds.length))).attr("x2", x(Math.min(progress, run.rounds.length)));
+    }
+
+    function drawUncertaintyGraph() {
+      const svg = d3.select("#uncertaintyGraph");
+      svg.selectAll("*").remove();
+
+      const width = svg.node().clientWidth;
+      const height = svg.node().clientHeight;
+      const margin = { top: 12, right: 14, bottom: 24, left: 34 };
+      const data = run.rounds.map((round) => ({
+        round: round.index + 0.5,
+        value: round.uncertainty
+      }));
+
+      const x = d3.scaleLinear().domain([0, run.rounds.length]).range([margin.left, width - margin.right]);
+      const y = d3.scaleLinear().domain([0, Math.max(0.35, d3.max(data, (d) => d.value) || 0.1)]).nice().range([height - margin.bottom, margin.top]);
+
+      svg.append("g")
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(d3.axisBottom(x).ticks(run.rounds.length).tickFormat((d) => d === 0 ? "" : `r${d}`))
+        .call((g) => g.selectAll("text").attr("fill", "#5c6675").attr("font-size", 10))
+        .call((g) => g.select(".domain").attr("stroke", "#d7dde8"))
+        .call((g) => g.selectAll(".tick line").attr("stroke", "#d7dde8"));
+
+      svg.append("g")
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(d3.axisLeft(y).ticks(3).tickFormat((d) => `${Math.round(d * 100)}%`))
+        .call((g) => g.selectAll("text").attr("fill", "#5c6675").attr("font-size", 10))
+        .call((g) => g.select(".domain").attr("stroke", "#d7dde8"))
+        .call((g) => g.selectAll(".tick line").attr("stroke", "#d7dde8"));
+
+      const area = d3.area()
+        .x((d) => x(d.round))
+        .y0(y(0))
+        .y1((d) => y(d.value))
+        .curve(d3.curveCatmullRom.alpha(0.6));
+
+      const line = d3.line()
+        .x((d) => x(d.round))
+        .y((d) => y(d.value))
+        .curve(d3.curveCatmullRom.alpha(0.6));
+
+      svg.append("path")
+        .datum(data)
+        .attr("d", area)
+        .attr("fill", "#d79a18")
+        .attr("opacity", 0.16);
+
+      svg.append("path")
+        .datum(data)
+        .attr("d", line)
+        .attr("fill", "none")
+        .attr("stroke", "#d79a18")
+        .attr("stroke-width", 2.5)
+        .attr("stroke-linecap", "round");
+
+      svg.append("g")
+        .selectAll("circle")
+        .data(data)
+        .join("circle")
+        .attr("cx", (d) => x(d.round))
+        .attr("cy", (d) => y(d.value))
+        .attr("r", 3.4)
+        .attr("fill", (d, i) => run.rounds[i].stop ? "#1f8f5f" : "#d79a18")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 1.4);
+
+      svg.append("circle")
+        .attr("id", "uncertaintyMarker")
+        .attr("r", 5.2)
+        .attr("fill", "#18202b")
+        .attr("stroke", "#fff")
+        .attr("stroke-width", 2);
+    }
+
+    function updateUncertaintyMarker() {
+      const svg = d3.select("#uncertaintyGraph");
+      const width = svg.node().clientWidth;
+      const height = svg.node().clientHeight;
+      const margin = { top: 12, right: 14, bottom: 24, left: 34 };
+      const maxY = Math.max(0.35, d3.max(run.rounds, (d) => d.uncertainty) || 0.1);
+      const x = d3.scaleLinear().domain([0, run.rounds.length]).range([margin.left, width - margin.right]);
+      const y = d3.scaleLinear().domain([0, maxY]).nice().range([height - margin.bottom, margin.top]);
+      const round = decisionForProgress();
+      const markerX = x(Math.min(progress, run.rounds.length));
+      const markerY = y(round.uncertainty);
+      svg.select("#uncertaintyMarker").attr("cx", markerX).attr("cy", markerY);
+    }
+
+    function animate(now) {
+      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      lastTime = now;
+
+      if (playing && !staticScene) {
+        progress += dt * speed * 0.58;
+        const maxProgress = run.T - 1;
+        if (progress > maxProgress + 0.5) progress = 0;
+      }
+
+      controls.update();
+      updateSceneState();
+      renderer.render(scene, camera);
+      labelRenderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    function layerAppearTime(p) {
+      return p[2] === 0 ? 0 : p[2] - 0.5;
+    }
+
+    function resize() {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      renderer.setSize(width, height, false);
+      labelRenderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      drawTimeline();
+      drawUncertaintyGraph();
+      updateTimelineMarker();
+      updateUncertaintyMarker();
+    }
+
+    playBtn.addEventListener("click", () => {
+      playing = !playing;
+      playBtn.textContent = playing ? "Pause" : "Play";
+      playBtn.classList.toggle("primary", playing);
+    });
+
+    rewindBtn.addEventListener("click", () => {
+      progress = 0;
+      updateSceneState();
+    });
+
+    stepBtn.addEventListener("click", () => {
+      playing = false;
+      playBtn.textContent = "Play";
+      playBtn.classList.remove("primary");
+      progress = Math.min(progress + 0.5, run.T - 1);
+      updateSceneState();
+    });
+
+    sigmaSlider.addEventListener("input", () => {
+      sigmaValue.textContent = Number(sigmaSlider.value).toFixed(2);
+      rebuildScene();
+    });
+
+    speedSlider.addEventListener("input", () => {
+      speed = Number(speedSlider.value);
+      speedValue.textContent = `${speed.toFixed(1)}x`;
+    });
+
+    focusToggle.addEventListener("change", updateSceneState);
+    structureChoices.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-structure]");
+      if (!button) return;
+      selectedStructure = button.dataset.structure;
+      structureChoices.querySelectorAll("button").forEach(item => item.classList.toggle("active", item === button));
+      rebuildScene();
+    });
+    distanceChoices.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-distance]");
+      if (!button) return;
+      selectedDistance = Number(button.dataset.distance);
+      distanceChoices.querySelectorAll("button").forEach(item => item.classList.toggle("active", item === button));
+      rebuildScene();
+    });
+    ratioChoices.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-ratio]");
+      if (!button) return;
+      selectedRatio = button.dataset.ratio;
+      ratioChoices.querySelectorAll("button").forEach(item => item.classList.toggle("active", item === button));
+      rebuildScene();
+    });
+    window.addEventListener("resize", resize);
+
+    sigmaValue.textContent = Number(sigmaSlider.value).toFixed(2);
+    speed = Number(speedSlider.value);
+    rebuildScene();
+    resize();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
