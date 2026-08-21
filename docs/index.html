@@ -398,13 +398,7 @@
     }
 
     .error-swatch {
-      display: grid;
-      place-items: center;
-      color: var(--red);
-      background: rgba(211, 59, 59, 0.10);
-      font-size: 16px;
-      font-weight: 900;
-      line-height: 1;
+      background: repeating-linear-gradient(135deg, #2878d0 0 3px, #fff 3px 4px, #d33b3b 4px 7px);
     }
 
     @media (max-width: 900px) {
@@ -479,7 +473,7 @@
             <span class="legend-item"><span class="swatch" style="background: var(--violet)"></span>X-type stabilizer</span>
             <span class="legend-item"><span class="swatch" style="background: var(--red)"></span>Z-type stabilizer</span>
             <span class="legend-item"><span class="swatch" style="background: var(--cyan)"></span>Data qubit</span>
-            <span class="legend-item"><span class="swatch error-swatch">×</span>Qubit with error</span>
+            <span class="legend-item"><span class="swatch error-swatch"></span>Pauli error: X blue, Z red</span>
             <span id="trustedLegend" class="legend-item"><span class="swatch" style="background: var(--green)"></span>Trusted measurement</span>
             <span id="periodicLegend" class="legend-item" hidden><span class="swatch" style="background: #a7b0bf"></span>Periodic boundary copy</span>
           </div>
@@ -672,12 +666,6 @@
     const starGeometry = new THREE.BoxGeometry(0.18, 0.08, 0.18);
     const plaqGeometry = new THREE.BoxGeometry(0.18, 0.08, 0.18);
     const scannerGeometry = new THREE.RingGeometry(0.7, 0.76, 96);
-    const errorMarkerGeometry = new THREE.BufferGeometry();
-    errorMarkerGeometry.setAttribute("position", new THREE.Float32BufferAttribute([
-      -0.14, -0.14, 0.11, 0.14, 0.14, 0.11,
-      -0.14, 0.14, 0.11, 0.14, -0.14, 0.11
-    ], 3));
-
     const materials = {
       star: new THREE.MeshStandardMaterial({ color: colors.star, roughness: 0.52, metalness: 0.08, transparent: true, opacity: 0.72 }),
       plaq: new THREE.MeshStandardMaterial({ color: colors.plaq, roughness: 0.55, metalness: 0.05, transparent: true, opacity: 0.7 }),
@@ -687,8 +675,6 @@
       failed: new THREE.MeshStandardMaterial({ color: colors.failed, roughness: 0.32, metalness: 0.08, emissive: colors.failed, emissiveIntensity: 0.28, transparent: true, opacity: 1 }),
       scanner: new THREE.MeshBasicMaterial({ color: colors.scanner, transparent: true, opacity: 0.48, side: THREE.DoubleSide })
     };
-    const errorMarkerMaterial = new THREE.LineBasicMaterial({ color: colors.failed, transparent: true, opacity: 1 });
-
     let sceneObjects = [];
     let roundLabels = [];
     let run = null;
@@ -705,6 +691,7 @@
     let dataQubitMeshes = [];
     let errorMarkers = [];
     let currentPhysicalErrors = new Set();
+    let currentPhysicalErrorTypes = new Map();
 
     const asymmetricFamilies = {
       "5:3": "[[23,1,3,5]], [[105,1,6,10]], [[247,1,9,15]], [[449,1,12,20]]",
@@ -996,6 +983,7 @@
         baseScale: scale,
         baseOpacity: mesh.material.opacity,
         role,
+        codePosition: [...p],
         type: "node",
         baseColor: mesh.material.color.clone(),
         baseEmissive: mesh.material.emissive ? mesh.material.emissive.getHex() : 0
@@ -1006,18 +994,58 @@
       return mesh;
     }
 
-    function addErrorMarker(p, appear, scale = 1) {
-      const marker = new THREE.LineSegments(errorMarkerGeometry, errorMarkerMaterial.clone());
+    function errorMarkerTexture(type) {
+      const markerCanvas = document.createElement("canvas");
+      markerCanvas.width = 128;
+      markerCanvas.height = 128;
+      const context = markerCanvas.getContext("2d");
+      context.beginPath();
+      context.arc(64, 64, 55, 0, Math.PI * 2);
+      context.clip();
+      context.fillStyle = type === "X" ? "#2878d0" : "#d33b3b";
+      context.fillRect(0, 0, 128, 128);
+      if (type === "XZ") {
+        context.fillStyle = "#2878d0";
+        for (let x = -128; x < 256; x += 28) {
+          context.beginPath();
+          context.moveTo(x, 0);
+          context.lineTo(x + 18, 0);
+          context.lineTo(x - 110, 128);
+          context.lineTo(x - 128, 128);
+          context.closePath();
+          context.fill();
+        }
+      }
+      context.strokeStyle = "#ffffff";
+      context.lineWidth = 7;
+      context.beginPath();
+      context.arc(64, 64, 55, 0, Math.PI * 2);
+      context.stroke();
+      context.fillStyle = "#ffffff";
+      context.font = "bold 40px sans-serif";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillText(type, 64, 66);
+      const texture = new THREE.CanvasTexture(markerCanvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      return texture;
+    }
+
+    function addErrorMarker(p, appear, scale = 1, errorType = "XZ") {
+      const marker = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: errorMarkerTexture(errorType), transparent: true, depthTest: false
+      }));
       marker.position.copy(positionOf(p));
-      marker.scale.setScalar(scale);
+      marker.scale.set(0.34 * scale, 0.34 * scale, 1);
       marker.renderOrder = 8;
       marker.userData = {
         appear,
-        baseScale: scale,
+        baseScale: 0.34 * scale,
         baseOpacity: 1,
         role: "qubit-error",
         type: "node",
-        baseColor: new THREE.Color(colors.failed),
+        errorType,
+        baseColor: new THREE.Color(0xffffff),
         baseEmissive: 0
       };
       world.add(marker);
@@ -1038,6 +1066,16 @@
         if (Math.abs(normalSample(random) * sigma) > threshold) errors.add(index);
       });
       return errors;
+    }
+
+    function errorTypesForIndices(indices) {
+      const types = new Map();
+      indices.forEach(index => {
+        const random = seededRandom((index + 1) * 7919 + selectedDistance * 101 + selectedStructure.length * 1009);
+        const value = random();
+        types.set(index, value < 0.42 ? "X" : value < 0.84 ? "Z" : "XZ");
+      });
+      return types;
     }
 
     function decoderKind() {
@@ -1107,13 +1145,13 @@
       const bp = kind === "BP–OSD";
       const colourProjection = kind === "Projected MWPM";
       const descriptions = bp ? [
-        "The non-zero syndrome checks are highlighted in amber.",
+        "X errors are blue, Z errors are red and combined X/Z errors are striped; their non-zero syndrome checks remain highlighted.",
         "Belief-propagation messages connect unsatisfied checks to candidate error qubits.",
         "Low-confidence qubits are ranked for ordered-statistics post-processing.",
         "OSD selects the most likely correction consistent with the syndrome.",
         "The candidate correction is applied and the displayed syndrome is cleared."
       ] : [
-        colourProjection ? "Syndrome defects are projected onto matching graphs." : "Non-zero syndrome defects are highlighted in amber.",
+        colourProjection ? "X/Z errors remain coloured while syndrome defects are projected onto matching graphs." : "X errors are blue, Z errors are red and combined X/Z errors are striped; non-zero syndrome defects remain highlighted.",
         "Candidate connections between syndrome defects are displayed.",
         "The minimum-weight pairing is selected from those connections.",
         "Correction chains are applied along the selected paths.",
@@ -1190,7 +1228,7 @@
         geometry.setAttribute("position", new THREE.Float32BufferAttribute(values, 3));
         const lines = new THREE.LineSegments(geometry, material);
         if (material.isLineDashedMaterial) lines.computeLineDistances();
-        lines.userData = { appear: 0, type };
+        lines.userData = { appear: 0, type, baseColor: lines.material.color.clone() };
         world.add(lines);
         sceneObjects.push(lines);
       }
@@ -1221,7 +1259,7 @@
       const material = new THREE.LineDashedMaterial({ color: colors.time, dashSize: 0.08, gapSize: 0.06, transparent: true, opacity: 0.24 });
       const lines = new THREE.LineSegments(geometry, material);
       lines.computeLineDistances();
-      lines.userData = { appear: 0, type: "time" };
+      lines.userData = { appear: 0, type: "time", baseColor: lines.material.color.clone() };
       world.add(lines);
       sceneObjects.push(lines);
     }
@@ -1295,16 +1333,17 @@
       if (!staticScene) makeTimeLines();
 
       const embedded = embeddedModes.includes(selectedStructure);
-      for (const p of run.stars) addNode(p, starGeometry, materials.star, embedded ? 0 : layerAppearTime(p), embedded ? 0.72 : 1);
-      for (const p of run.plaqs) addNode(p, plaqGeometry, materials.plaq, embedded ? 0 : layerAppearTime(p), embedded ? 0.72 : 1);
+      for (const p of run.stars) addNode(p, starGeometry, materials.star, embedded ? 0 : layerAppearTime(p), embedded ? 0.72 : 1, "x-stabilizer");
+      for (const p of run.plaqs) addNode(p, plaqGeometry, materials.plaq, embedded ? 0 : layerAppearTime(p), embedded ? 0.72 : 1, "z-stabilizer");
       const physicalErrors = physicalQubitErrorIndices(run.qubits);
       currentPhysicalErrors = physicalErrors;
+      currentPhysicalErrorTypes = errorTypesForIndices(physicalErrors);
       run.qubits.forEach((p, index) => {
         const appear = embedded ? 0 : layerAppearTime(p);
         const scale = embedded ? 0.58 : 0.9;
         const qubitMesh = addNode(p, sphereGeometry, materials.qubit, appear, scale, physicalErrors.has(index) ? "error-qubit" : "data-qubit");
         dataQubitMeshes[index] = qubitMesh;
-        if (physicalErrors.has(index)) errorMarkers.push(addErrorMarker(p, appear, embedded ? 0.82 : 1.15));
+        if (physicalErrors.has(index)) errorMarkers.push(addErrorMarker(p, appear, embedded ? 0.82 : 1.15, currentPhysicalErrorTypes.get(index)));
       });
       staticErrorValue.textContent = `${physicalErrors.size} / ${run.qubits.length}`;
       decoderPanel.hidden = true;
@@ -1366,6 +1405,7 @@
       for (const object of sceneObjects) {
         if (object.userData.type === "lines" || object.userData.type === "wrap-lines" || object.userData.type === "time") {
           object.visible = true;
+          object.material.color.copy(object.userData.baseColor);
           object.material.opacity = staticScene ? 0.32 : object.userData.type === "time"
             ? 0.08 + 0.08 * (clamped / maxProgress)
             : object.userData.type === "wrap-lines"
@@ -1404,6 +1444,28 @@
         label.visible = age >= -0.08;
         label.element.classList.toggle("past", isPast);
         label.element.style.opacity = label.visible ? String(isPast ? 0.36 + (1 - pastMix) * 0.34 : 1) : "0";
+      }
+
+      if (!decoderPanel.hidden && decoderStep >= 1 && decoderStep < 5) {
+        const triggeredChecks = new Set(nearestChecksForErrors().map(p => p.join("|")));
+        sceneObjects.forEach(object => {
+          const role = object.userData.role;
+          const isErrorQubit = role === "error-qubit";
+          const isErrorMarker = role === "qubit-error";
+          const isTriggeredCheck = ["x-stabilizer", "z-stabilizer"].includes(role)
+            && triggeredChecks.has(object.userData.codePosition?.join("|"));
+          if (["lines", "wrap-lines", "time"].includes(object.userData.type)) {
+            object.material.color?.setHex(colors.faded);
+            object.material.opacity = 0.035;
+          } else if (!isErrorQubit && !isErrorMarker && !isTriggeredCheck) {
+            object.material.color?.setHex(colors.faded);
+            object.material.emissive?.setHex(0);
+            object.material.opacity = 0.08;
+          } else {
+            object.material.color?.copy(object.userData.baseColor);
+            object.material.opacity = 1;
+          }
+        });
       }
 
       if (!decoderPanel.hidden && decoderStep >= 3) {
