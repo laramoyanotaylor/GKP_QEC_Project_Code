@@ -284,6 +284,23 @@
     .error-counter strong { color: var(--red); font-size: 21px; white-space: nowrap; }
     .choice-grid button[data-structure="spacetime"] { grid-column: 1 / -1; }
 
+    .decoder-launch { width: 100%; }
+    .decoder-panel {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--cyan);
+      border-radius: 8px;
+      background: rgba(0, 151, 167, 0.06);
+    }
+    .decoder-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .decoder-head strong { font-size: 14px; }
+    .decoder-badge { color: #006c78; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .decoder-panel p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .decoder-progress { height: 5px; overflow: hidden; border-radius: 9px; background: #dfe5ec; }
+    .decoder-progress span { display: block; height: 100%; width: 0; background: var(--cyan); transition: width .25s ease; }
+    .decoder-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
     .buttons {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -511,6 +528,21 @@
           <div class="metric"><span>Untrusted</span><strong id="failedMetric">0</strong></div>
         </section>
 
+        <button id="decodeBtn" class="decoder-launch" type="button">Decode errors</button>
+        <section id="decoderPanel" class="decoder-panel" hidden aria-live="polite">
+          <div class="decoder-head">
+            <strong id="decoderTitle">MWPM decoding</strong>
+            <span id="decoderStepLabel" class="decoder-badge">Ready</span>
+          </div>
+          <p id="decoderDescription">Begin the educational decoder visualisation.</p>
+          <div class="decoder-progress"><span id="decoderProgress"></span></div>
+          <div class="decoder-actions">
+            <button id="decoderResetBtn" type="button">Reset decoder</button>
+            <button id="decoderNextBtn" type="button" class="primary">Start</button>
+          </div>
+          <p><em>Educational visualisation; it does not invoke a numerical decoder library.</em></p>
+        </section>
+
         <div id="playbackControls" class="buttons">
           <button id="rewindBtn" type="button">Reset</button>
           <button id="playBtn" type="button" class="primary">Pause</button>
@@ -569,6 +601,14 @@
     const structureImage = document.querySelector("#structureImage");
     const staticErrorCounter = document.querySelector("#staticErrorCounter");
     const staticErrorValue = document.querySelector("#staticErrorValue");
+    const decodeBtn = document.querySelector("#decodeBtn");
+    const decoderPanel = document.querySelector("#decoderPanel");
+    const decoderTitle = document.querySelector("#decoderTitle");
+    const decoderStepLabel = document.querySelector("#decoderStepLabel");
+    const decoderDescription = document.querySelector("#decoderDescription");
+    const decoderProgress = document.querySelector("#decoderProgress");
+    const decoderNextBtn = document.querySelector("#decoderNextBtn");
+    const decoderResetBtn = document.querySelector("#decoderResetBtn");
     const mainTitle = document.querySelector("#mainTitle");
     const mainSubtitle = document.querySelector("#mainSubtitle");
     const periodicLegend = document.querySelector("#periodicLegend");
@@ -660,6 +700,11 @@
     let selectedDistance = 3;
     let selectedRatio = "5:3";
     let staticScene = true;
+    let decoderStep = 0;
+    let decoderObjects = [];
+    let dataQubitMeshes = [];
+    let errorMarkers = [];
+    let currentPhysicalErrors = new Set();
 
     const asymmetricFamilies = {
       "5:3": "[[23,1,3,5]], [[105,1,6,10]], [[247,1,9,15]], [[449,1,12,20]]",
@@ -977,6 +1022,7 @@
       };
       world.add(marker);
       sceneObjects.push(marker);
+      return marker;
     }
 
     function physicalQubitErrorIndices(qubits) {
@@ -992,6 +1038,125 @@
         if (Math.abs(normalSample(random) * sigma) > threshold) errors.add(index);
       });
       return errors;
+    }
+
+    function decoderKind() {
+      if (["mkmn", "bb", "asym"].includes(selectedStructure)) return "BP–OSD";
+      if (selectedStructure === "colour") return "Projected MWPM";
+      return "MWPM";
+    }
+
+    function clearDecoderObjects() {
+      decoderObjects.forEach(object => world.remove(object));
+      decoderObjects = [];
+      errorMarkers.forEach(marker => marker.visible = true);
+      dataQubitMeshes.forEach(mesh => {
+        mesh.material.color.copy(mesh.userData.baseColor);
+        mesh.material.emissive?.setHex(mesh.userData.baseEmissive || 0);
+      });
+    }
+
+    function addDecoderLine(a, b, color, opacity = 1) {
+      const geometry = new THREE.BufferGeometry().setFromPoints([positionOf(a), positionOf(b)]);
+      const line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color, transparent: true, opacity }));
+      line.renderOrder = 12;
+      world.add(line);
+      decoderObjects.push(line);
+    }
+
+    function addDecoderDefect(p, color = 0xd79a18) {
+      const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.115, 18, 12),
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.95 })
+      );
+      mesh.position.copy(positionOf(p));
+      mesh.renderOrder = 13;
+      world.add(mesh);
+      decoderObjects.push(mesh);
+    }
+
+    function nearestChecksForErrors() {
+      const checks = [...run.stars, ...run.plaqs];
+      return [...currentPhysicalErrors].map(index => {
+        const qubit = run.qubits[index];
+        return checks.reduce((best, check) => {
+          const distance = positionOf(check).distanceToSquared(positionOf(qubit));
+          return !best || distance < best.distance ? { check, distance } : best;
+        }, null)?.check || qubit;
+      });
+    }
+
+    function resetDecoder() {
+      clearDecoderObjects();
+      decoderStep = 0;
+      decoderTitle.textContent = `${decoderKind()} decoding`;
+      decoderStepLabel.textContent = "Ready";
+      decoderDescription.textContent = currentPhysicalErrors.size
+        ? "Start to reveal the syndrome produced by the marked physical-qubit errors."
+        : "No physical errors are present at this sigma, so the decoder has nothing to correct.";
+      decoderProgress.style.width = "0%";
+      decoderNextBtn.textContent = "Start";
+      decoderNextBtn.disabled = currentPhysicalErrors.size === 0;
+    }
+
+    function showDecoderStep() {
+      clearDecoderObjects();
+      const kind = decoderKind();
+      const errors = [...currentPhysicalErrors].map(index => run.qubits[index]);
+      const checks = nearestChecksForErrors();
+      const bp = kind === "BP–OSD";
+      const colourProjection = kind === "Projected MWPM";
+      const descriptions = bp ? [
+        "The non-zero syndrome checks are highlighted in amber.",
+        "Belief-propagation messages connect unsatisfied checks to candidate error qubits.",
+        "Low-confidence qubits are ranked for ordered-statistics post-processing.",
+        "OSD selects the most likely correction consistent with the syndrome.",
+        "The candidate correction is applied and the displayed syndrome is cleared."
+      ] : [
+        colourProjection ? "Syndrome defects are projected onto matching graphs." : "Non-zero syndrome defects are highlighted in amber.",
+        "Candidate connections between syndrome defects are displayed.",
+        "The minimum-weight pairing is selected from those connections.",
+        "Correction chains are applied along the selected paths.",
+        "The corrected qubits are shown in green and the syndrome is cleared."
+      ];
+
+      checks.forEach(check => addDecoderDefect(check));
+      if (decoderStep >= 2) {
+        if (bp) {
+          errors.forEach((error, i) => addDecoderLine(checks[i], error, 0xd79a18, 0.75));
+        } else {
+          for (let i = 0; i < checks.length; i += 1) {
+            for (let j = i + 1; j < checks.length; j += 1) addDecoderLine(checks[i], checks[j], 0xa7b0bf, 0.25);
+          }
+        }
+      }
+      if (decoderStep >= 3) {
+        for (let i = 0; i + 1 < checks.length; i += 2) addDecoderLine(checks[i], checks[i + 1], bp ? 0x7757c7 : 0xd79a18, 1);
+        errors.forEach((error, index) => {
+          const mesh = dataQubitMeshes[[...currentPhysicalErrors][index]];
+          if (mesh) {
+            mesh.material.color.setHex(0xd79a18);
+            mesh.material.emissive?.setHex(0x5b3900);
+          }
+        });
+      }
+      if (decoderStep >= 4) errors.forEach((error, i) => addDecoderLine(checks[i], error, 0x0097a7, 1));
+      if (decoderStep >= 5) {
+        decoderObjects.forEach(object => object.visible = false);
+        errorMarkers.forEach(marker => marker.visible = false);
+        [...currentPhysicalErrors].forEach(index => {
+          const mesh = dataQubitMeshes[index];
+          if (mesh) {
+            mesh.material.color.setHex(colors.trusted);
+            mesh.material.emissive?.setHex(0x083c26);
+          }
+        });
+      }
+      decoderStepLabel.textContent = `Step ${decoderStep} of 5`;
+      decoderDescription.textContent = descriptions[decoderStep - 1];
+      decoderProgress.style.width = `${decoderStep * 20}%`;
+      decoderNextBtn.textContent = decoderStep === 5 ? "Decoded" : "Next step";
+      decoderNextBtn.disabled = decoderStep === 5;
     }
 
     function makeLineSegments(edges) {
@@ -1084,6 +1249,9 @@
       world.clear();
       sceneObjects = [];
       roundLabels = [];
+      decoderObjects = [];
+      dataQubitMeshes = [];
+      errorMarkers = [];
       progress = 0;
       staticScene = selectedStructure !== "spacetime";
       spacetimePanels.forEach(panel => panel.hidden = staticScene);
@@ -1130,13 +1298,18 @@
       for (const p of run.stars) addNode(p, starGeometry, materials.star, embedded ? 0 : layerAppearTime(p), embedded ? 0.72 : 1);
       for (const p of run.plaqs) addNode(p, plaqGeometry, materials.plaq, embedded ? 0 : layerAppearTime(p), embedded ? 0.72 : 1);
       const physicalErrors = physicalQubitErrorIndices(run.qubits);
+      currentPhysicalErrors = physicalErrors;
       run.qubits.forEach((p, index) => {
         const appear = embedded ? 0 : layerAppearTime(p);
         const scale = embedded ? 0.58 : 0.9;
-        addNode(p, sphereGeometry, materials.qubit, appear, scale, physicalErrors.has(index) ? "error-qubit" : "data-qubit");
-        if (physicalErrors.has(index)) addErrorMarker(p, appear, embedded ? 0.82 : 1.15);
+        const qubitMesh = addNode(p, sphereGeometry, materials.qubit, appear, scale, physicalErrors.has(index) ? "error-qubit" : "data-qubit");
+        dataQubitMeshes[index] = qubitMesh;
+        if (physicalErrors.has(index)) errorMarkers.push(addErrorMarker(p, appear, embedded ? 0.82 : 1.15));
       });
       staticErrorValue.textContent = `${physicalErrors.size} / ${run.qubits.length}`;
+      decoderPanel.hidden = true;
+      decodeBtn.textContent = `Decode errors · ${decoderKind()}`;
+      resetDecoder();
       if (selectedStructure === "spacetime") {
         // Show a repeated fundamental domain without creating new physical
         // objects. Right copies left; bottom copies top. These visual aliases
@@ -1232,6 +1405,16 @@
         label.element.classList.toggle("past", isPast);
         label.element.style.opacity = label.visible ? String(isPast ? 0.36 + (1 - pastMix) * 0.34 : 1) : "0";
       }
+
+      if (!decoderPanel.hidden && decoderStep >= 3) {
+        [...currentPhysicalErrors].forEach(index => {
+          const mesh = dataQubitMeshes[index];
+          if (!mesh) return;
+          mesh.material.color.setHex(decoderStep >= 5 ? colors.trusted : 0xd79a18);
+          mesh.material.emissive?.setHex(decoderStep >= 5 ? 0x083c26 : 0x5b3900);
+        });
+      }
+      if (!decoderPanel.hidden && decoderStep >= 5) errorMarkers.forEach(marker => marker.visible = false);
 
       updateReadout();
       updateTimelineMarker();
@@ -1474,6 +1657,22 @@
     });
 
     focusToggle.addEventListener("change", updateSceneState);
+    decodeBtn.addEventListener("click", () => {
+      decoderPanel.hidden = !decoderPanel.hidden;
+      if (!decoderPanel.hidden) {
+        playing = false;
+        playBtn.textContent = "Play";
+        playBtn.classList.remove("primary");
+        resetDecoder();
+      }
+      decodeBtn.textContent = decoderPanel.hidden ? `Decode errors · ${decoderKind()}` : "Close decoder";
+    });
+    decoderNextBtn.addEventListener("click", () => {
+      if (decoderStep >= 5 || currentPhysicalErrors.size === 0) return;
+      decoderStep += 1;
+      showDecoderStep();
+    });
+    decoderResetBtn.addEventListener("click", resetDecoder);
     structureChoices.addEventListener("click", (event) => {
       const button = event.target.closest("button[data-structure]");
       if (!button) return;
