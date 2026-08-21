@@ -199,9 +199,7 @@
     }
 
     aside {
-      display: grid;
-      grid-template-rows: auto minmax(150px, 1fr) auto;
-      gap: 20px;
+      display: block;
       min-width: 0;
       padding: 22px;
       border-left: 1px solid var(--line);
@@ -261,12 +259,29 @@
       gap: 16px;
     }
 
+    [hidden] { display: none !important; }
+
     .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .choice-grid button { min-height: 52px; padding: 7px 8px; font-size: 12px; }
     .choice-grid button.active, .chip-row button.active { border-color: var(--cyan); background: rgba(0,151,167,.10); color: #006c78; }
     .chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
     .chip-row button { min-height: 32px; padding: 4px 9px; font-size: 12px; }
     .structure-note { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+
+    .error-counter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .error-counter span { color: var(--muted); font-size: 12px; font-weight: 700; }
+    .error-counter strong { color: var(--red); font-size: 21px; white-space: nowrap; }
+    .choice-grid button[data-structure="spacetime"] { grid-column: 1 / -1; }
 
     .buttons {
       display: grid;
@@ -439,46 +454,28 @@
     </section>
 
     <aside>
-      <section id="metricPanel" class="metric-grid" aria-label="current run statistics">
-        <div class="metric">
-          <span>Round</span>
-          <strong id="roundMetric">1</strong>
-        </div>
-        <div class="metric">
-          <span>Decision</span>
-          <strong id="decisionMetric">Continue</strong>
-        </div>
-        <div class="metric">
-          <span>Trusted</span>
-          <strong id="trustedMetric">0</strong>
-        </div>
-        <div class="metric">
-          <span>Untrusted</span>
-          <strong id="failedMetric">0</strong>
-        </div>
-      </section>
-
-      <section id="timelinePanel">
-        <p class="panel-title">Measurement Timeline</p>
-        <svg id="timeline" role="img" aria-label="measurement trust by round"></svg>
-      </section>
-
       <section class="controls">
-        <div id="playbackControls" class="buttons">
-          <button id="rewindBtn" type="button">Reset</button>
-          <button id="playBtn" type="button" class="primary">Pause</button>
-          <button id="stepBtn" type="button">Step</button>
+        <div id="visualKeyBlock">
+          <p class="panel-title">Visual key</p>
+          <div class="legend" aria-label="visual legend">
+            <span class="legend-item"><span class="swatch" style="background: var(--violet)"></span>X-type stabilizer</span>
+            <span class="legend-item"><span class="swatch" style="background: var(--red)"></span>Z-type stabilizer</span>
+            <span class="legend-item"><span class="swatch" style="background: var(--cyan)"></span>Data qubit</span>
+            <span class="legend-item"><span class="swatch error-swatch">×</span>Qubit with error</span>
+            <span id="trustedLegend" class="legend-item"><span class="swatch" style="background: var(--green)"></span>Trusted measurement</span>
+            <span id="periodicLegend" class="legend-item" hidden><span class="swatch" style="background: #a7b0bf"></span>Periodic boundary copy</span>
+          </div>
         </div>
 
         <label>Choose structure</label>
         <div id="structureChoices" class="choice-grid">
           <button data-structure="surface" class="active">2D surface code</button>
           <button data-structure="torus">Toric code · torus</button>
-          <button data-structure="spacetime">Spacetime toric</button>
           <button data-structure="colour">Triangular colour code</button>
           <button data-structure="mkmn">Large qLDPC</button>
           <button data-structure="bb">BB code</button>
           <button data-structure="asym">Asymmetric HGP</button>
+          <button data-structure="spacetime">Spacetime toric</button>
         </div>
 
         <div id="distanceControl">
@@ -496,12 +493,33 @@
             <button data-ratio="5:2">5:2</button><button data-ratio="3:1">3:1</button>
           </div>
         </div>
-        <p id="structureNote" class="structure-note"></p>
-
         <label id="sigmaControl">
           <span>GKP sigma <span id="sigmaValue" class="readout">0.45</span></span>
           <input id="sigmaSlider" type="range" min="0.18" max="0.72" step="0.01" value="0.45">
         </label>
+
+        <section id="staticErrorCounter" class="error-counter" aria-live="polite">
+          <span>Physical qubits with errors</span>
+          <strong id="staticErrorValue">0 / 0</strong>
+        </section>
+
+        <section id="metricPanel" class="metric-grid" aria-label="current toric round statistics">
+          <div class="metric"><span>Round</span><strong id="roundMetric">1</strong></div>
+          <div class="metric"><span>Decision</span><strong id="decisionMetric">Continue</strong></div>
+          <div class="metric"><span>Trusted</span><strong id="trustedMetric">0</strong></div>
+          <div class="metric"><span>Untrusted</span><strong id="failedMetric">0</strong></div>
+        </section>
+
+        <div id="playbackControls" class="buttons">
+          <button id="rewindBtn" type="button">Reset</button>
+          <button id="playBtn" type="button" class="primary">Pause</button>
+          <button id="stepBtn" type="button">Step</button>
+        </div>
+
+        <section id="timelinePanel">
+          <p class="panel-title">Measurement Timeline</p>
+          <svg id="timeline" role="img" aria-label="measurement trust by round"></svg>
+        </section>
 
         <label id="speedControl">
           <span>Animation speed <span id="speedValue" class="readout">1.0x</span></span>
@@ -513,15 +531,6 @@
           <input id="focusToggle" type="checkbox" checked>
         </label>
 
-        <p class="panel-title">Visual key</p>
-        <div class="legend" aria-label="visual legend">
-          <span class="legend-item"><span class="swatch" style="background: var(--violet)"></span>X-type stabilizer</span>
-          <span class="legend-item"><span class="swatch" style="background: var(--red)"></span>Z-type stabilizer</span>
-          <span class="legend-item"><span class="swatch" style="background: var(--cyan)"></span>Data qubit</span>
-          <span class="legend-item"><span class="swatch error-swatch">×</span>Qubit with error</span>
-          <span id="trustedLegend" class="legend-item"><span class="swatch" style="background: var(--green)"></span>Trusted measurement</span>
-          <span id="periodicLegend" class="legend-item" hidden><span class="swatch" style="background: #a7b0bf"></span>Periodic boundary copy</span>
-        </div>
       </section>
     </aside>
   </main>
@@ -557,7 +566,8 @@
     const ratioControl = document.querySelector("#ratioControl");
     const structureViewer = document.querySelector("#structureViewer");
     const structureImage = document.querySelector("#structureImage");
-    const structureNote = document.querySelector("#structureNote");
+    const staticErrorCounter = document.querySelector("#staticErrorCounter");
+    const staticErrorValue = document.querySelector("#staticErrorValue");
     const mainTitle = document.querySelector("#mainTitle");
     const mainSubtitle = document.querySelector("#mainSubtitle");
     const periodicLegend = document.querySelector("#periodicLegend");
@@ -1076,6 +1086,7 @@
       progress = 0;
       staticScene = selectedStructure !== "spacetime";
       spacetimePanels.forEach(panel => panel.hidden = staticScene);
+      staticErrorCounter.hidden = !staticScene;
       statusStrip.hidden = staticScene;
       const embeddedModes = ["colour", "mkmn", "bb", "asym"];
       structureViewer.style.display = "none";
@@ -1124,9 +1135,7 @@
         addNode(p, sphereGeometry, materials.qubit, appear, scale, physicalErrors.has(index) ? "error-qubit" : "data-qubit");
         if (physicalErrors.has(index)) addErrorMarker(p, appear, embedded ? 0.82 : 1.15);
       });
-      const errorSummary = `At sigma ${Number(sigmaSlider.value).toFixed(2)}: ${physicalErrors.size} of ${run.qubits.length} displayed data qubits carry an error.`;
-      mainSubtitle.textContent = `${mainSubtitle.textContent} ${errorSummary}`;
-      structureNote.textContent = errorSummary;
+      staticErrorValue.textContent = `${physicalErrors.size} / ${run.qubits.length}`;
       if (selectedStructure === "spacetime") {
         // Show a repeated fundamental domain without creating new physical
         // objects. Right copies left; bottom copies top. These visual aliases
